@@ -93,7 +93,7 @@
         <p class="overText two">Where 3D assets are just used for whatever lmao</p>
         <h3 class="overText three">One Man</h3>
         <p class="overText four">Tries to learn Three.js</p>
-    <p class="overText five">I just got this from SketchFab</p>
+    <p class="overText five">I just got this model from SketchFab</p>
     <p class="overText six">It's got orbit controls, try it</p>
 
     <script type="module">
@@ -122,9 +122,9 @@
     // Star Geometry add function
     function addStar(){
         const geometry = new THREE.SphereGeometry(0.25,24,24);
-        const material = new THREE.MeshStandardMaterial({color: 0xffffff});
+        const material = new THREE.MeshStandardMaterial({color: 0x99999, emissive: 0xff0000});
         const star = new THREE.Mesh( geometry, material);
-        const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
+        const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(50));
         star.position.set(x,y,z);
         scene.add(star);
     }
@@ -155,7 +155,7 @@
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
+    renderer.toneMappingExposure = .8;
     renderer.outputEncoding = THREE.sRGBEncoding;
 
 
