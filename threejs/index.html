@@ -104,6 +104,8 @@
 
     //Scene gltf model
     const scene = new THREE.Scene();
+    const group = new THREE.Group();
+    scene.add( group );
 
     // //Space Skybox - it's rough
     // const spaceTexture = new THREE.TextureLoader().load('../threejs/img/space.jpg');
@@ -120,19 +122,28 @@
     camera.position.set(0,10,-40);
 
     // Star Geometry add function
-    function addStar(){
-        const geometry = new THREE.SphereGeometry(0.25,24,24);
-        const material = new THREE.MeshStandardMaterial({color: 0x99999, emissive: 0xff0000});
-        const star = new THREE.Mesh( geometry, material);
-        const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(50));
-        star.position.set(x,y,z);
-        scene.add(star);
-    }
-    Array(200).fill().forEach(addStar);
+    // function addStar(){
+    //     const geometry = new THREE.SphereGeometry(0.25,24,24);
+    //     const material = new THREE.MeshStandardMaterial({color: 0x99999, emissive: 0xff0000});
+    //     const star = new THREE.Mesh( geometry, material);
+    //     const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(50));
+    //     star.position.set(x,y,z);
+    //     scene.add(star);
+    // }
+    // Array(200).fill().forEach(addStar);
     // end Stars
 
+    //particle Light
+   const particleLight = new THREE.Mesh(
+        new THREE.SphereGeometry( .14, .18, .18 ),
+        new THREE.MeshBasicMaterial( { color: 0xffffff } )
+    );
+    particleLight.add( new THREE.PointLight( 0xffffff, 1 ) );
+    scene.add( particleLight );
+
     let object;
-    let objToRender = './ftm'; //models
+    let objToRender = './casa_gasia'; //models ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     //GLTF Loader - load from folders scene gltf
     const loader = new GLTFLoader();
     loader.load(
@@ -187,15 +198,35 @@
     });
 
     //Render scene with animate
-    function animate() {
-      controls.update()
-      renderer.render(scene,camera)
-      //animation code here
 
-      requestAnimationFrame(animate);
+    function animate() {
+
+        requestAnimationFrame( animate );
+
+        render();
+
+        controls.update();
+
     }
     animate();
+    function render() {
 
+        const timer = Date.now() * 0.00025;
+
+        particleLight.position.x = Math.sin( timer * 7 ) * 300;
+        particleLight.position.y = Math.cos( timer * 5 ) * 400;
+        particleLight.position.z = Math.cos( timer * 3 ) * 300;
+
+        for ( let i = 0; i < group.children.length; i ++ ) {
+
+            const child = group.children[ i ];
+            child.rotation.y += 0.005;
+
+        }
+
+        renderer.render( scene, camera );
+
+    }
     </script>
   </body>
 </html>
