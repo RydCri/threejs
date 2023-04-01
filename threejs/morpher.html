@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Morpher</title>
+</head>
+<body>
+<style>
+  body,html{
+    margin:0;
+    padding:0;
+    background: black;
+  }
+  canvas {
+    height:100vh;
+    width:100vw;
+    z-index: 0;
+  }
+</style>
+<canvas class="webgl">
+
+</canvas>
+<script type="module">
+    import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
+    import {OrbitControls} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
+    import {GLTFLoader} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+
+//Scene
+    const scene = new THREE.Scene();
+    const group = new THREE.Group();
+
+//Camera
+//Camera position ternary objToRender === 'ftm' ? 25 : 500;
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.9, 300);
+
+    camera.position.set(0,10,-40);
+
+    //particle Light
+    const particleLight = new THREE.Mesh(
+        new THREE.SphereGeometry( .14, .18, .18 ),
+        new THREE.MeshBasicMaterial( { color: 0xffffff } )
+    );
+    particleLight.add( new THREE.PointLight( 0x99999, 1 ) );
+    scene.add( particleLight );
+    //particle Light
+    const hemLight = new THREE.Mesh(
+        new THREE.SphereGeometry( .14, .18, .18 ),
+        new THREE.MeshBasicMaterial( { color: 0xffffff } )
+    );
+    hemLight.add( new THREE.HemisphereLight( 0x99999,0x00000, 1 ) );
+    scene.add( hemLight );
+
+
+    //DOM Canvas
+    const canvas = document.querySelector('.webgl')
+    //Renderer
+    const renderer = new THREE.WebGLRenderer({canvas,antialias: true}); //alpha for transparent background
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = .8;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+
+
+//Orbit Controls
+    const controls = new OrbitControls(camera,canvas)
+    controls.enableDamping = true;
+    controls.target.set( 0, 0, 0 );
+// controls.autoRotate = true
+// controls.autoRotateSpeed =0.5
+
+//Listeners
+//Graciously resizes canvas when window is resized
+    window.addEventListener("resize", function(){
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+
+    //animate
+
+    function animate() {
+
+        requestAnimationFrame( animate );
+
+        render();
+
+        controls.update();
+    }
+    animate();
+//Render
+    function render() {
+
+        const timer = Date.now() * 0.00025;
+
+        particleLight.position.x = Math.sin( timer * 7 ) * 300;
+        particleLight.position.y = Math.cos( timer * 5 ) * 400;
+        particleLight.position.z = Math.cos( timer * 3 ) * 300;
+
+        for ( let i = 0; i < group.children.length; i ++ ) {
+
+            const child = group.children[ i ];
+            child.rotation.y += 0.005;
+
+        }
+
+        renderer.render( scene, camera );
+
+    }
+</script>
+</body>
+</html>
