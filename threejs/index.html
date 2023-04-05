@@ -108,7 +108,7 @@
     scene.add( group );
 
     // //Space Skybox - it's rough
-    const spaceTexture = new THREE.TextureLoader().load('../threejs/img/space.jpg');
+    const spaceTexture = new THREE.TextureLoader().load('../threejs/img/skyHDRI.exr');
     const spaceMesh = new THREE.Mesh(
         new THREE.SphereGeometry(300,300,300),
         new THREE.MeshBasicMaterial({map: spaceTexture})
