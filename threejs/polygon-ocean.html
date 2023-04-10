@@ -60,7 +60,134 @@
     color: #000000;
   }
 </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher</title>
+</head>
+<body>
+<style>
+  body {
+    background-color: #193c6d;
+    background-image: linear-gradient(100deg,black,darkblue);
+    background-size: 100%;
+    text-align: center;
+    margin: 0px;
+    overflow: hidden;
+  }
+  body {
+    background-color: black;
+    height: 100vh;
+    margin: 0rem;
+    overflow: hidden;
+  }
 
+  @keyframes rotate {
+    from {
+      rotate: 0deg;
+    }
+
+    50% {
+      scale: 1 1.5;
+    }
+
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  #blob {
+    height: 34vmax;
+    aspect-ratio: 1;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: linear-gradient(to right, aquamarine, mediumpurple);
+    animation: rotate 20s infinite;
+    opacity: 0.6;
+  }
+
+  #blur {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    backdrop-filter: blur(12vmax);
+    opacity: .5;
+  }
+
+  #CryptEx {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(3rem, 10vw, 10rem);
+    /*color: white;*/
+    background-image: linear-gradient(100deg,magenta,cyan);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color:transparent;
+    /*text-shadow: 1px 1px 3px black;*/
+    /*white-space: nowrap;*/
+    padding: 0rem clamp(1rem, 2vw, 3rem);
+    border-radius: clamp(0.4rem, 0.75vw, 1rem);
+    margin: 0rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    z-index: 3;
+  }
+</style>
+<!--<div id="blob"></div>-->
+<div id="blur"></div>
+<h1 id="CryptEx" data-value="CryptEx">CryptEx</h1>
+<div id="canvas_container"></div>
+<button id="fullscr">Go Fullscreen</button>
+<script>
+  /* -- Glow effect -- */
+
+  const blob = document.getElementById("blob");
+
+  window.onpointermove = event => {
+    const { clientX, clientY } = event;
+
+    blob.animate({
+      left: `${clientX}px`,
+      top: `${clientY}px`
+    }, { duration: 6000, fill: "forwards" });
+  }
+
+  /* -- Text effect -- */
+
+  const letters = "#:C?EFGH!JK{>NO)*&%SXYZ333";
+
+  let interval = null;
+
+  document.querySelector("h1").onmouseover = event => {
+    let iteration = 0;
+
+    clearInterval(interval);
+
+    interval = setInterval(() => {
+      event.target.innerText = event.target.innerText
+              .split("")
+              .map((letter, index) => {
+                if(index < iteration) {
+                  return event.target.dataset.value[index];
+                }
+
+                return letters[Math.floor(Math.random() * 26)]
+              })
+              .join("");
+
+      if(iteration >= event.target.dataset.value.length){
+        clearInterval(interval);
+      }
+
+      iteration += 1 / 3;
+    }, 30);
+  }
+</script>
 <div id="canvas_container"></div>
 <button id="fullscr">Go Fullscreen</button>
 
