@@ -12,6 +12,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background: black;
   }
   .container{
     width: 100%;
@@ -21,8 +22,8 @@
     background-color: #000000;
   }
 </style>
-
-<div id="jsi-particle-container" class="container"></div>
+<h3 style="color:white;text-shadow: 1px 1px 0 blueviolet; text-align: center;">Click to Transform Instantly</h3>
+<div id="webgl" class="container"></div>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <script>var RENDERER = {
   PARTICLE_COUNT : 1500,
@@ -41,7 +42,7 @@
   setParameters : function(strategy){
     this.$window = $(window);
 
-    this.$container = $('#jsi-particle-container');
+    this.$container = $('#webgl');
     this.width = this.$container.width();
     this.height = this.$container.height();
 
