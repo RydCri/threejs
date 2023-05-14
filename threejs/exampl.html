@@ -67,8 +67,8 @@
   import {OrbitControls} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
   import {GLTFLoader} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
   import {PointerLockControls} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/PointerLockControls.js";;
-
-  let camera, scene, renderer, controls;
+  import {Water} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/objects/Water.js"
+  let camera, scene, renderer, controls, object;
 
   const objects = [];
 
@@ -86,6 +86,8 @@
   const vertex = new THREE.Vector3();
   const color = new THREE.Color();
 
+  let water;
+
   init();
   animate();
 
@@ -96,13 +98,56 @@
 
     scene = new THREE.Scene();
     const spaceTexture = new THREE.TextureLoader().load('img/morrowind.jpg');
-    const skybox = new THREE.SphereGeometry(500,600,40);
+    const skybox = new THREE.SphereGeometry(800,800,60);
     skybox.scale(-1,1,1)
     const skyMat = new THREE.MeshBasicMaterial({map:spaceTexture});
     const skyboxMesh = new THREE.Mesh(skybox,skyMat)
     scene.add(skyboxMesh)
     // scene.background = new THREE.Color(0xffffff);
-    // scene.fog = new THREE.Fog(0xffffff, 3, 750);
+    scene.fog = new THREE.Fog(0xffffff, 0, 2000);
+
+    const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+
+ water = new Water(
+            waterGeometry,
+            {
+              textureWidth: 512,
+              textureHeight: 512,
+              waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
+
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+              } ),
+              sunDirection: new THREE.Vector3(),
+              sunColor: 0xffffff,
+              waterColor: 0x001e0f,
+              distortionScale: 3.7,
+              fog: scene.fog !== undefined
+            }
+    );
+
+    water.rotation.x = - Math.PI / 2;
+
+    scene.add( water );
+
+    //GLTF Loader - load from folders scene gltf
+    let objToRender = 'models/90sRoom/scene.gltf' //models ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    const loader = new GLTFLoader();
+    loader.load(
+            objToRender,
+            function (gltf) {
+              object = gltf.scene;
+              scene.add(object);
+            },
+            function (xhr) {
+              console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+            function (error) {
+              console.log(error);
+            }
+    );
+
 
     const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
     light.position.set(0.5, 1, 0.75);
@@ -202,7 +247,6 @@
     raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
 
     // floor
-
     let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
     floorGeometry.rotateX(-Math.PI / 2);
 
@@ -242,7 +286,7 @@
     requestAnimationFrame(animate);
 
     const time = performance.now();
-
+    water.material.uniforms[ 'time' ].value += 1.0 / 200.0;
     if (controls.isLocked === true) {
 
       raycaster.ray.origin.copy(controls.getObject().position);
