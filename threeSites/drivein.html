@@ -25,7 +25,7 @@
   import { UnrealBloomPass } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/postprocessing/UnrealBloomPass.js';
   import { TrackballControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/TrackballControls.js';
   import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS3DRenderer.js';
-  let camera, scene, renderer, orbit, mixer;
+  let camera, scene, renderer, orbit, mixer, clock;
   let controls;
   let mouseX = 0;
   let mouseY = 0;
@@ -76,10 +76,11 @@
       group.add( new Element( '9ubytEsCaS0', - 240, 0, 0, - Math.PI / 2 ) );
 
       scene.add( group );
+
       //Rotate animation
 
       const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 2 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 0 ] );
-      const xAxis = new THREE.Vector3( 1, 0, 0 );
+      const xAxis = new THREE.Vector3( 0, 1, 0 );
       const qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
       const qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, Math.PI );
       const quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1, 2 ], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
@@ -89,6 +90,8 @@
       const clip = new THREE.AnimationClip( 'Action', 3, [ positionKF, quaternionKF] );
       const clipAction = mixer.clipAction( clip );
       clipAction.play();
+      //Clock
+      clock = new THREE.Clock();
 
       controls = new TrackballControls( camera, renderer.domElement );
       controls.rotateSpeed = 4;
@@ -129,7 +132,18 @@
       // orbit.update();
       controls.update();
       renderer.render( scene, camera );
+      render()
 
+  }
+  function render() {
+
+      const delta = clock.getDelta();
+
+      if ( mixer ) {
+          mixer.update( delta );
+      }
+
+      renderer.render( scene, camera );
 
   }
 
