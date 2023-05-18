@@ -79,7 +79,7 @@
 
       //Rotate animation
 
-      const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 2 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 0 ] );
+      const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 0 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 360] );
       const xAxis = new THREE.Vector3( 0, 1, 0 );
       const qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
       const qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, Math.PI );
@@ -87,9 +87,9 @@
       //Mixer
       mixer = new THREE.AnimationMixer( group );
       //Clip
-      const clip = new THREE.AnimationClip( 'Action', 3, [ positionKF, quaternionKF] );
+      const clip = new THREE.AnimationClip( 'Action', 1, [ quaternionKF] );
       const clipAction = mixer.clipAction( clip );
-      clipAction.play();
+      // clipAction.play();
       //Clock
       clock = new THREE.Clock();
 
@@ -104,14 +104,13 @@
       blocker.style.display = 'none';
 
       controls.addEventListener( 'start', function () {
-
           blocker.style.display = '';
-
+          clipAction.pause()
       } );
       controls.addEventListener( 'end', function () {
 
           blocker.style.display = 'none';
-
+      // clipAction.play()
       } );
 
   }
