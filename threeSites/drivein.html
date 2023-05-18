@@ -78,18 +78,21 @@
       scene.add( group );
 
       //Rotate animation
+      const times = [0, 3, 6];
+      const values = [0, 0, 0, 2, 2, 2, 0, 0, 0];
 
-      const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 0 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 360] );
       const xAxis = new THREE.Vector3( 0, 1, 0 );
       const qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
       const qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, Math.PI );
-      const quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1, 2 ], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
+
+      // const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 0 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 360] );
+      const quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 6, 12], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
       //Mixer
       mixer = new THREE.AnimationMixer( group );
-      //Clip
-      const clip = new THREE.AnimationClip( 'Action', 1, [ quaternionKF] );
+      //Clip, number = duration
+      const clip = new THREE.AnimationClip( 'Action', 20, [ quaternionKF] );
       const clipAction = mixer.clipAction( clip );
-      // clipAction.play();
+      clipAction.play();
       //Clock
       clock = new THREE.Clock();
 
