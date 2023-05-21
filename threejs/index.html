@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
     <style>
@@ -116,21 +115,22 @@
     scene.add(spaceMesh)
 
     //Camera
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.9, 300);
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.7, 300);
     //Camera position ternary objToRender === 'ftm' ? 25 : 500;
 
-    camera.position.set(0,10,-40);
+    camera.position.set(50,20,10);
+    camera.rotateY(302)
 
     // Star Geometry add function
-    // function addStar(){
-    //     const geometry = new THREE.SphereGeometry(0.25,24,24);
-    //     const material = new THREE.MeshStandardMaterial({color: 0x99999, emissive: 0xff0000});
-    //     const star = new THREE.Mesh( geometry, material);
-    //     const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(50));
-    //     star.position.set(x,y,z);
-    //     scene.add(star);
-    // }
-    // Array(200).fill().forEach(addStar);
+    function addStar(){
+        const geometry = new THREE.SphereGeometry(0.25,24,24);
+        const material = new THREE.MeshStandardMaterial({color: 0x99999, emissive: 0xff0000});
+        const star = new THREE.Mesh( geometry, material);
+        const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(150));
+        star.position.set(x,y,z);
+        scene.add(star);
+    }
+    Array(200).fill().forEach(addStar);
     // end Stars
 
     //particle Light
@@ -142,58 +142,47 @@
     scene.add( particleLight );
 
     let object;
-    // let loader2 = new GLTFLoader();
-    // loader2.load(
-    //     `models/poly.glb`,
-    //     function (gltf) {
-    //         object = gltf.scene;
-    //         scene.add(object);
-    //         object.position.set(10,10,10);
-    //     },
-    //     function (xhr) {
-    //         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    //     },
-    //     function (error) {
-    //         console.log(error);
-    //     }
-    // );
-    let objToRender = './casa_gasia' //models ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    //GLTF Loader - load from folders scene gltf
     const loader = new GLTFLoader();
     loader.load(
-    `models/together.glb`,
+            `./models/LIS_BlackwellSwimmingPool_1.0.glb`,
             function (gltf) {
-            object = gltf.scene;
-            scene.add(object);
-          },
+              object = gltf.scene;
+              object.position.set(360,-4,-110)
+              object.scale.set(4,4,4)
+              scene.add(object);
+              console.log(object.position)
+            },
             function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+              console.log((xhr.loaded / xhr.total * 100) + '% loaded');
             },
             function (error) {
-            console.log(error);
+              console.log(error);
             }
     );
+    const ambientLight = new THREE.AmbientLight('white', .2);
+
+    const mainLight = new THREE.DirectionalLight('white', 5);
+    mainLight.position.set(10, 10, 10);
+    scene.add(ambientLight)
     //DOM Canvas
     const canvas = document.querySelector('.webgl')
     //Renderer
     const renderer = new THREE.WebGLRenderer({canvas,antialias: true}); //alpha for transparent background
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = .8;
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    // renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    // renderer.toneMappingExposure = .8;
+    // renderer.outputEncoding = THREE.sRGBEncoding;
 
 
 
 
     //Lights
-    const topLight = new THREE.DirectionalLight(0xffffff,1); //color, brightness
-    topLight.position.set(50,50,50)
-    topLight.castShadow = true;
-    scene.add(topLight);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1)
-    scene.add(ambientLight);
+    // const topLight = new THREE.DirectionalLight(0xffffff,1); //color, brightness
+    // topLight.position.set(50,50,50)
+    // topLight.castShadow = true;
+    // scene.add(topLight);
+
 
     //Orbit Controls
 
@@ -201,8 +190,7 @@
     controls.enableDamping = true;
 
     controls.target.set( 0, 0, 0 );
-    // controls.autoRotate = true
-    // controls.autoRotateSpeed =0.5
+
 
     //Listeners
     //Graciously resizes canvas when window is resized
@@ -226,19 +214,6 @@
     }
     animate();
     function render() {
-
-        const timer = Date.now() * 0.00025;
-
-        particleLight.position.x = Math.sin( timer * 7 ) * 300;
-        particleLight.position.y = Math.cos( timer * 5 ) * 400;
-        particleLight.position.z = Math.cos( timer * 3 ) * 300;
-
-        for ( let i = 0; i < group.children.length; i ++ ) {
-
-            const child = group.children[ i ];
-            child.rotation.y += 0.005;
-
-        }
 
         renderer.render( scene, camera );
 
