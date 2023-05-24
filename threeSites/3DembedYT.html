@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-  <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="embedYT.css">
 </head>
 <body>
 
@@ -16,16 +16,9 @@
 <script type="module">
 
   import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
-  import {OrbitControls} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
-  import {GLTFLoader} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
-  import {PointerLockControls} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/PointerLockControls.js";
-  import {Water} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/objects/Water.js";
-  import { EffectComposer } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/postprocessing/EffectComposer.js';
-  import { RenderPass } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/postprocessing/RenderPass.js';
-  import { UnrealBloomPass } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/postprocessing/UnrealBloomPass.js';
   import { TrackballControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/TrackballControls.js';
   import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS3DRenderer.js';
-  let camera, scene, renderer, orbit, mixer, clock;
+  let camera, scene, renderer, orbit, mixer, clock, group, requestID;
   let controls;
   let mouseX = 0;
   let mouseY = 0;
@@ -69,7 +62,7 @@
       renderer.setSize( window.innerWidth, window.innerHeight );
       container.appendChild( renderer.domElement );
 
-      const group = new THREE.Group();
+      group = new THREE.Group();
       group.add( new Element( 'SJOz3qjfQXU', 0, 0, 240, 0 ) );
       group.add( new Element( 'Y2-xZ-1HE-Q', 240, 0, 0, Math.PI / 2 ) );
       group.add( new Element( 'IrydklNpcFI', 0, 0, - 240, Math.PI ) );
@@ -78,28 +71,30 @@
       scene.add( group );
 
       //Rotate animation
-      const times = [0, 3, 6];
-      const values = [0, 0, 0, 2, 2, 2, 0, 0, 0];
-
-      const xAxis = new THREE.Vector3( 0, 1, 0 );
-      const qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
-      const qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, Math.PI );
-
-      // const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 0 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 360] );
-      const quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 6, 12], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
-      //Mixer
-      mixer = new THREE.AnimationMixer( group );
-      //Clip, number = duration
-      const clip = new THREE.AnimationClip( 'Action', 20, [ quaternionKF] );
-      const clipAction = mixer.clipAction( clip );
-      clipAction.play();
-      //Clock
-      clock = new THREE.Clock();
+      // const times = [0, 3, 6];
+      // const values = [0, 0, 0, 2, 2, 2, 0, 0, 0];
+      //
+      // const xAxis = new THREE.Vector3( 0, 1, 0 );
+      // const qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
+      // const qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, Math.PI );
+      //
+      // // const positionKF = new THREE.VectorKeyframeTrack( '.position', [ 0, 1, 0 ], [ 0, 0, 0, 30, 0, 0, 0, 0, 360] );
+      // const quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 6, 12], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
+      // //Mixer
+      // mixer = new THREE.AnimationMixer( group );
+      // //Clip, number = duration
+      // const clip = new THREE.AnimationClip( 'Action', 20, [ quaternionKF] );
+      // const clipAction = mixer.clipAction( clip );
+      // clipAction.play();
+      // //Clock
+      // clock = new THREE.Clock();
 
       controls = new TrackballControls( camera, renderer.domElement );
       controls.rotateSpeed = 4;
       controls.enableDamping = true;
 
+      // controls.addEventListener("hover", (e) => {
+      // });
 
       // Block iframe events when dragging camera
 
@@ -108,12 +103,12 @@
 
       controls.addEventListener( 'start', function () {
           blocker.style.display = '';
-          clipAction.pause()
+
       } );
       controls.addEventListener( 'end', function () {
 
           blocker.style.display = 'none';
-      // clipAction.play()
+
       } );
 
   }
@@ -133,21 +128,27 @@
       requestAnimationFrame( animate );
       // orbit.update();
       controls.update();
-      renderer.render( scene, camera );
-      render()
-
-  }
-  function render() {
-
-      const delta = clock.getDelta();
-
-      if ( mixer ) {
-          mixer.update( delta );
-      }
+      //DO NOT REQUEST ID - yet
+      // requestID = requestAnimationFrame( animate );
+      // group.style.transform = 'rotate(20deg)'
+      // group.rotation.x += 0.01;
+      // group.rotation.y += 0.2;
 
       renderer.render( scene, camera );
+      // render()
 
   }
+  // function render() {
+  //
+  //     const delta = clock.getDelta();
+  //
+  //     if ( mixer ) {
+  //         mixer.update( delta );
+  //     }
+  //
+  //     renderer.render( scene, camera );
+  //
+  // }
 
 </script>
   </body>
