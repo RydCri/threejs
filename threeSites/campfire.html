@@ -46,10 +46,11 @@ canvas {
   const loader = new GLTFLoader().setPath("../threejs/models/");
   loader.load("Campfire2.glb", function (gltf) {
     const { animations } = gltf;
-    cube = gltf.scene.children[0];
+    cube = gltf.scene;
     mixer = new THREE.AnimationMixer(cube);
-    const animationAction = mixer.clipAction(animations[0]);
-    animationAction.play();
+      animations.forEach( function ( clip ) {
+          mixer.clipAction( clip ).play();
+      } );
     scene.add(cube);
   });
 
