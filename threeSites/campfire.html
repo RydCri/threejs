@@ -44,25 +44,26 @@ canvas {
   let cube, mixer;
 
   const loader = new GLTFLoader().setPath("../threejs/models/");
-  loader.load("Campfire2.glb", function (gltf) {
+  loader.load("Campfire.glb", function (gltf) {
     const { animations } = gltf;
     cube = gltf.scene;
     mixer = new THREE.AnimationMixer(cube);
       animations.forEach( function ( clip ) {
           mixer.clipAction( clip ).play();
       } );
+      animations.clampWhenFinished = true;
     scene.add(cube);
   });
 
   camera.position.z = 5;
   const clock = new THREE.Clock();
   const animate = function (deltaSeconds) {
-    requestAnimationFrame(animate);
 
 
     if (mixer) {
       mixer.update(clock.getDelta());
     }
+    requestAnimationFrame(animate);
     renderer.render(scene, camera);
   };
 
