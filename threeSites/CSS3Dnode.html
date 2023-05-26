@@ -76,7 +76,7 @@
     <p>The cubes position is now changing</p>
   </section>
 
-  <section>
+  <section id="Lander">
     <h2>Changing Objects Rotation</h2>
     <p>The cubes rotation is now changing</p>
   </section>
@@ -108,7 +108,7 @@ let idle,dt,lastframe= Date.now();
 
   const renderer = new THREE.WebGLRenderer()
   renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setPixelRatio( 0.6 );
+  // renderer.setPixelRatio( 0.6 );
   document.body.appendChild(renderer.domElement)
 
   const geometry = new THREE.BoxGeometry()
@@ -116,34 +116,25 @@ let idle,dt,lastframe= Date.now();
     color: 0xfffff,
     wireframe: true,
   })
-let obj;
-  const loader = new GLTFLoader();
-  loader.load(
-          `../threejs/models/Campfire2.glb`,
-          function (gltf) {
-         obj = gltf.scene;
-           mixer = new THREE.AnimationMixer(obj);
-           let clips = obj.animations
-            scene.add(obj);
-            obj.position.set(0, 0.5, -10)
-            clips.forEach( function ( clip ) {
-              mixer.clipAction( clip ).play();
-            } );
-
-          },
-          function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-          },
-          function (error) {
-            console.log(error);
-          }
-  );
-  // cube = loader;
+// let obj;
+  const loader = new GLTFLoader().setPath("../threejs/models/");
+  loader.load("milk_box.glb", function (gltf) {
+    const { animations } = gltf;
+    cube = gltf.scene;
+    cube.scale.set(10,10,10)
+    mixer = new THREE.AnimationMixer(cube);
+    animations.forEach( function ( clip ) {
+      mixer.clipAction( clip ).play();
+    } );
+    animations.clampWhenFinished = true;
+    scene.add(cube);
+  });
+  cube = loader;
 
   function update() {
     // dt = (Date.now()-lastframe)/1000
     // lastframe = Date.now()
-
+    //
       mixer.update(clock.getDelta())
 
 
