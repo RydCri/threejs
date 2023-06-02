@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ThreeJS</title>
+  <link rel="stylesheet" href="scrollnHold.css">
+  <style>
+    body {
+      overflow-x: hidden;
+      margin: 0px;
+      font-family: monospace;
+      color: white;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    main {
+      width: 100vw;
+      height: 200vw;
+      z-index: 99;
+      position: absolute;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+      font-size: 5vh;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 20px;
+      font-size: 4vh;
+    }
+
+    #scrollProgress {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      z-index: 99;
+      font-size: 3vh;
+    }
+
+    #vwSrcLink {
+      position: fixed;
+      z-index: 99;
+    }
+  </style>
+  <script type="importmap">
+            {
+                "imports": {
+                    "three": "/build/three.module.js"
+                }
+            }
+        </script>
+</head>
+
+<body>
+
+<span id="scrollProgress"></span>
+<main>
+<div id="typeBar">
+  <section style="text-align: center;">
+  <h1>Hello, my name is Jason Crites</h1>
+    <h2>I'm a fullstack Web developer</h2>
+    <hr>
+  <a href="#">See my Projects</a> <a href="#">Contact Me</a>
+  </section>
+</div>
+  <section style="overflow-y: scroll;position:sticky;height:10%;">
+    <h2>About Me</h2>
+    <p>From San Antonio, TX </p>
+  </section>
+
+  <section id="Lander">
+    <h2>Changing Objects Rotation</h2>
+    <p>The cubes rotation is now changing</p>
+  </section>
+
+  <section>
+    <h2>Changing Camera Position</h2>
+    <p>The camera position is now changing</p>
+  </section>
+
+  <section>
+    <h2>You are at the bottom</h2>
+    <p>The cube will now be auto rotating</p>
+    <p>Now you can scroll back to the top to reverse the animation</p>
+  </section>
+  <section>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores eos nesciunt qui quisquam? Aperiam
+      atque aut debitis ducimus, excepturi fuga hic incidunt libero nam obcaecati quasi quo quos voluptate.</p>
+  </section>
+</main>
+<script type="module">
+  import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
+  import Stats from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/libs/stats.module.js";
+  import {GLTFLoader} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+  // let cube;
+  let mixer;
+  let idle,dt,lastframe= Date.now();
+  let clock = new THREE.Clock();
+  const scene = new THREE.Scene()
+
+  const gridHelper = new THREE.GridHelper(10, 10, 0xaec6cf, 0xaec6cf)
+  scene.add(gridHelper)
+
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true});
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  // renderer.setPixelRatio( 0.6 );
+  renderer.autoClear = false;
+  renderer.setClearColor(0x990000, 5.90);
+  renderer.shadowMap.enabled = true;
+  document.body.appendChild(renderer.domElement)
+
+  // const geometry = new THREE.BoxGeometry()
+  // const material = new THREE.MeshBasicMaterial({
+  //   color: 0xfffff,
+  //   wireframe: true,
+  // })
+  // let obj;
+  let cube = new GLTFLoader().setPath("../threejs/models/");
+  cube.load("venice.glb", function (gltf) {
+    const { animations } = gltf;
+    cube = gltf.scene;
+
+    cube.traverse(n => { if ( n.isMesh ) {
+      n.castShadow = true;
+      n.receiveShadow = true;
+      if(n.material.map) n.material.map.anisotropy = 16;
+    }});
+    cube.scale.set(.01,.01,.01)
+    // mixer = new THREE.AnimationMixer(cube);
+    // animations.forEach( function ( clip ) {
+    //   mixer.clipAction( clip ).play();
+    // } );
+    // animations.clampWhenFinished = true;
+    scene.add(cube);
+  });
+
+  let milkbox = new GLTFLoader().setPath("../threejs/models/");
+  milkbox.load("milk_box.glb", function (gltf) {
+    milkbox = gltf.scene;
+    milkbox.scale.set(10,10,10)
+    milkbox.position.set(0,28,8)
+    scene.add(milkbox);
+  })
+
+  let milkbox2 = new GLTFLoader().setPath("../threejs/models/");
+  milkbox2.load("milk_box.glb", function (gltf) {
+    milkbox2 = gltf.scene;
+    milkbox2.scale.set(10,10,10)
+    milkbox2.position.set(1,2,0)
+    scene.add(milkbox2);
+  })
+  // cube = loader;
+
+  // function update() {
+  //   // dt = (Date.now()-lastframe)/1000
+  //   // lastframe = Date.now()
+  //   //
+  //   //   mixer.update(clock.getDelta())
+  //
+  //
+  //   renderer.render( scene, camera );
+  // }
+
+  // cube = new THREE.Mesh(geometry, material)
+  // cube.position.set(0, 0.5, -10)
+  // scene.add(cube)
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  // scene.add(ambientLight);
+  const hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 2);
+  scene.add(hemiLight)
+  let light = new THREE.SpotLight(0xffa95c,4);
+  light.position.set(-50,50,50);
+  light.castShadow = true;
+  light.shadow.bias = -0.0001;
+  light.shadow.mapSize.width = 1024*4;
+  light.shadow.mapSize.height = 1024*4;
+  scene.add( light );
+  window.addEventListener('resize', onWindowResize, false)
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    render()
+  }
+
+
+
+  /* Liner Interpolation
+   * lerp(min, max, ratio)
+   * eg,
+   * lerp(20, 60, .5)) = 40
+   * lerp(-20, 60, .5)) = 20
+   * lerp(20, 60, .75)) = 50
+   * lerp(-20, -10, .1)) = -.19
+   */
+  function lerp(x, y, a) {
+    return (1 - a) * x + a * y
+  }
+
+  // Used to fit the lerps to start and end at specific scrolling percentages
+  function scalePercent(start, end) {
+    return (scrollPercent - start) / (end - start)
+  }
+
+  const animationScripts = []
+
+  //add an animation that flashes the cube through 100 percent of scroll
+  animationScripts.push({
+    start: 0,
+    end: 132,
+    func: () => {
+      milkbox.rotation.y += 0.01
+      milkbox2.rotation.y -= 0.01
+        light.position.set(
+                camera.position.x + 10,
+                camera.position.y + 10,
+                camera.position.z + 10,
+        );
+    }
+  })
+
+  //add an animation that moves the cube through first 40 percent of scroll
+  animationScripts.push({
+    start: 0,
+    end: 40,
+    func: () => {
+      camera.lookAt(cube.position)
+      camera.position.set(0, 1, 2)
+      cube.position.z = lerp(-10, 0, scalePercent(0, 40))
+      //console.log(cube.position.z)
+    },
+  })
+
+  //add an animation that rotates the cube between 40-60 percent of scroll
+  animationScripts.push({
+    start: 40,
+    end: 60,
+    func: () => {
+      camera.lookAt(cube.position)
+      camera.position.set(0, 1, 2)
+      //auto rotate
+      cube.rotation.z = lerp(0, Math.PI, scalePercent(40, 60))
+      //console.log(cube.rotation.z)
+    },
+  })
+
+  //add an animation that moves the camera between 60-80 percent of scroll
+  animationScripts.push({
+    start: 60,
+    end: 80,
+    func: () => {
+      //auto rotate
+      camera.position.x = lerp(0, 5, scalePercent(60, 80))
+      camera.position.y = lerp(1, 5, scalePercent(60, 80))
+      camera.lookAt(cube.position)
+      //console.log(camera.position.x + " " + camera.position.y)
+    },
+  })
+
+  //add an animation that auto rotates the cube from 80 percent of scroll
+  animationScripts.push({
+    start: 80,
+    end: 101,
+    func: () => {
+      //auto rotate
+      // cube.rotation.x += 0.01
+      // cube.rotation.y += 0.01
+    },
+  })
+
+  animationScripts.push({
+    start: 101,
+    end: 131,
+    func: () => {
+      //auto rotate
+      // cube.rotation.x += 0.01
+      // cube.rotation.y += 0.01
+      //attempt to return to previous anim
+      camera.position.x = lerp(0, 5, scalePercent(80, 100))
+      camera.position.y = lerp(1, 5, scalePercent(80, 100))
+      camera.lookAt(cube.position)
+    },
+  })
+  function playScrollAnimations() {
+    animationScripts.forEach((a) => {
+      if (scrollPercent >= a.start && scrollPercent < a.end) {
+        a.func()
+      }
+    })
+  }
+
+  let scrollPercent = 0
+
+  document.body.onscroll = () => {
+    //calculate the current scroll progress as a percentage
+    scrollPercent =
+            ((document.documentElement.scrollTop || document.body.scrollTop) /
+                    ((document.documentElement.scrollHeight || document.body.scrollHeight) -
+                            document.documentElement.clientHeight)) * 131
+    document.getElementById('scrollProgress').innerText =
+            'Scroll Progress : ' + scrollPercent.toFixed(2)
+  }
+
+  // const stats = new Stats()
+  // document.body.appendChild(stats.dom)
+
+  function animate() {
+    // var delta = clock.getDelta();
+    requestAnimationFrame(animate)
+    // requestAnimationFrame( update );
+    playScrollAnimations()
+    // update()
+    render()
+
+    // stats.update();
+  }
+
+  function render() {
+    renderer.render(scene, camera)
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+  animate()
+
+</script>
+</body>
+</html>
