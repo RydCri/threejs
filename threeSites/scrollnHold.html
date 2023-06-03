@@ -6,6 +6,78 @@
   <title>ThreeJS</title>
   <link rel="stylesheet" href="scrollnHold.css">
   <style>
+    a {
+      color: #8ff;
+    }
+
+    #menu {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .element {
+      width: 120px;
+      height: 160px;
+      box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+      border: 1px solid rgba(127,255,255,0.25);
+      font-family: Helvetica, sans-serif;
+      text-align: center;
+      line-height: normal;
+      cursor: default;
+    }
+
+    .element:hover {
+      box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
+      border: 1px solid rgba(127,255,255,0.75);
+    }
+
+    .element .number {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 12px;
+      color: rgba(127,255,255,0.75);
+    }
+
+    .element .symbol {
+      position: absolute;
+      top: 40px;
+      left: 0px;
+      right: 0px;
+      font-size: 60px;
+      font-weight: bold;
+      color: rgba(255,255,255,0.75);
+      text-shadow: 0 0 10px rgba(0,255,255,0.95);
+    }
+
+    .element .details {
+      position: absolute;
+      bottom: 15px;
+      left: 0px;
+      right: 0px;
+      font-size: 12px;
+      color: rgba(127,255,255,0.75);
+    }
+
+    button {
+      color: rgba(127,255,255,0.75);
+      background: transparent;
+      outline: 1px solid rgba(127,255,255,0.75);
+      border: 0px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: rgba(0,255,255,0.5);
+    }
+
+    button:active {
+      color: #000000;
+      background-color: rgba(0,255,255,0.75);
+    }
     body {
       overflow-x: hidden;
       margin: 0px;
@@ -61,69 +133,181 @@
 <body>
 
 <span id="scrollProgress"></span>
-<main>
-<div id="typeBar">
-  <section style="text-align: center;">
-  <h1>Hello, my name is Jason Crites</h1>
-    <h2>I'm a fullstack Web developer</h2>
-    <hr>
-  <a href="#">See my Projects</a> <a href="#">Contact Me</a>
-  </section>
-</div>
-  <section style="overflow-y: scroll;position:sticky;height:10%;">
-    <h2>About Me</h2>
-    <p>From San Antonio, TX </p>
-  </section>
+<main style="height: 1100vh;">
+<!--&lt;!&ndash;<div id="typeBar">&ndash;&gt;-->
+<!--&lt;!&ndash;  <section style="text-align: center;">&ndash;&gt;-->
 
-  <section id="Lander">
-    <h2>Changing Objects Rotation</h2>
-    <p>The cubes rotation is now changing</p>
-  </section>
+<!--&lt;!&ndash;  <h1>Hello, my name is Jason Crites</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;    <h2>I'm a fullstack Web developer</h2>&ndash;&gt;-->
+<!--&lt;!&ndash;    <hr>&ndash;&gt;-->
+<!--&lt;!&ndash;  <a href="#">See my Projects</a> <a href="#">Contact Me</a>&ndash;&gt;-->
+<!--&lt;!&ndash;  </section>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;  <section style="overflow-y: scroll;position:sticky;height:10%;">&ndash;&gt;-->
+<!--&lt;!&ndash;    <h2>About Me</h2>&ndash;&gt;-->
+<!--&lt;!&ndash;    <p>From San Antonio, TX </p>&ndash;&gt;-->
+<!--&lt;!&ndash;  </section>&ndash;&gt;-->
 
-  <section>
-    <h2>Changing Camera Position</h2>
-    <p>The camera position is now changing</p>
-  </section>
+<!--  <section id="Lander">-->
+<!--    <h2>Changing Camera Rotation</h2>-->
+<!--    <p>The Camera's rotation is now changing</p>-->
+<!--  </section>-->
 
-  <section>
-    <h2>You are at the bottom</h2>
-    <p>The cube will now be auto rotating</p>
-    <p>Now you can scroll back to the top to reverse the animation</p>
-  </section>
-  <section>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores eos nesciunt qui quisquam? Aperiam
-      atque aut debitis ducimus, excepturi fuga hic incidunt libero nam obcaecati quasi quo quos voluptate.</p>
-  </section>
+<!--  <section>-->
+<!--    <h2>Changing Camera Position</h2>-->
+<!--    <p>The camera position is now changing</p>-->
+<!--  </section>-->
+
+<!--  <section>-->
+<!--    <h2>You are at the bottom</h2>-->
+<!--    <p>sdlghagds;</p>-->
+<!--    <p>Now you can scroll back to the top to reverse the animation</p>-->
+<!--  </section>-->
+<!--  <section>-->
+<!--    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores eos nesciunt qui quisquam? Aperiam-->
+<!--      atque aut debitis ducimus, excepturi fuga hic incidunt libero nam obcaecati quasi quo quos voluptate.</p>-->
+<!--  </section>-->
 </main>
+
+<div id="webgl"></div>
+<div id="cssgl"></div>
 <script type="module">
   import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
   import Stats from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/libs/stats.module.js";
   import {GLTFLoader} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+  import { RoomEnvironment } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/environments/RoomEnvironment.js';
+  import { RectAreaLightUniformsLib } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
+  import { RectAreaLightHelper } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/helpers/RectAreaLightHelper.js';
+  import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS3DRenderer.js';
+  import { CSS2DRenderer, CSS2DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS2DRenderer.js';
+
+
   // let cube;
   let mixer;
   let idle,dt,lastframe= Date.now();
   let clock = new THREE.Clock();
   const scene = new THREE.Scene()
+  RectAreaLightUniformsLib.init();
+
+
 
   const gridHelper = new THREE.GridHelper(10, 10, 0xaec6cf, 0xaec6cf)
-  scene.add(gridHelper)
+  // scene.add(gridHelper)
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true});
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
   renderer.setSize(window.innerWidth, window.innerHeight)
   // renderer.setPixelRatio( 0.6 );
   renderer.autoClear = false;
-  renderer.setClearColor(0x990000, 5.90);
+  renderer.setClearColor( 0xffffff, 0);
   renderer.shadowMap.enabled = true;
-  document.body.appendChild(renderer.domElement)
+  // document.body.appendChild(renderer.domElement)
+  document.getElementById('webgl').appendChild(renderer.domElement)
 
-  // const geometry = new THREE.BoxGeometry()
-  // const material = new THREE.MeshBasicMaterial({
-  //   color: 0xfffff,
-  //   wireframe: true,
-  // })
-  // let obj;
+  const renderer2 = new CSS3DRenderer({antialias: true,alpha: true});
+  renderer2.setSize(window.innerWidth, window.innerHeight)
+  // renderer2.setClearColor( 0xffffff, 0);
+  // renderer2.autoClear = false;
+  document.getElementById('cssgl').appendChild(renderer2.domElement)
+
+  var root = new THREE.Object3D()
+  root.position.set(1,-40,-60)
+  root.rotation.y = Math.PI;
+  scene.add(root)
+
+  // var tvBox = new THREE.Object3D()
+  // tvBox.position.set(-71,-32,-46)
+  // tvBox.rotation.y = Math.PI;
+  function makeElementObject(type, width, height) {
+    const obj = new THREE.Object3D
+
+    const element = document.createElement( type );
+    element.style.width = width+'px';
+    element.style.height = height+'px';
+    element.style.opacity = 0.999;
+    element.style.boxSizing = 'border-box'
+
+    var css3dObject = new CSS2DObject( element );
+    obj.css3dObject = css3dObject
+    obj.add(css3dObject)
+
+    // make an invisible plane for the DOM element to chop
+    // clip a WebGL geometry with it.
+    var material = new THREE.MeshPhongMaterial({
+      opacity	: 0.15,
+      color	: new THREE.Color( 0x111111 ),
+      blending: THREE.NoBlending,
+      side	: THREE.DoubleSide,
+    });
+    var geometry = new THREE.BoxGeometry( width,height,10);
+    var img = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial
+      map:THREE.ImageUtils.loadTexture('./img/Night_SanAntonio.jpeg')
+    });
+    var mesh = new THREE.Mesh( geometry, img );
+    img.map.needsUpdate = true; //ADDED
+    // mesh.castShadow = true;
+    // mesh.receiveShadow = true;
+    // obj.lightShadowMesh = mesh
+    obj.add( mesh );
+
+    return obj
+  }
+  function makeCSSObject(type, width, height) {
+    const obj = new THREE.Object3D
+
+    const element = document.createElement( type );
+    element.style.width = width+'px'*0;
+    element.style.height = height+'px'*.01;
+    element.style.opacity = 0.0;
+    element.style.boxSizing = 'border-box'
+
+    var css3dObject = new CSS3DObject( element );
+    obj.css3dObject = css3dObject
+    obj.add(css3dObject)
+
+    // make an invisible plane for the DOM element to chop
+    // clip a WebGL geometry with it.
+    var material = new THREE.MeshPhongMaterial({
+      opacity	: 0.0,
+      color	: new THREE.Color( 0x911111 ),
+      blending: THREE.NoBlending,
+      side	: THREE.DoubleSide,
+    });
+    var geometry = new THREE.BoxGeometry( width, height, 1 );
+    var mesh = new THREE.Mesh( geometry );
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    obj.lightShadowMesh = mesh
+    obj.add( mesh );
+
+    return obj
+  }
+
+  var tv = makeCSSObject('div',10,11)
+  tv.css3dObject.element.textContent = 'Check out my projects'
+  tv.css3dObject.element.style.fontSize = '5px'
+  tv.css3dObject.element.style.position = 'fixed'
+  var background = makeElementObject('div', 250, 200)
+  var resume = makeCSSObject('div',0,2)
+  resume.css3dObject.element.textContent = "Jason Crites - Web Developer"
+  resume.css3dObject.element.style.opacity = "1"
+  resume.css3dObject.element.style.padding = '1px'
+  resume.css3dObject.element.style.fontSize = '10px'
+  resume.css3dObject.element.style.boxShadow = '2px 1px 0 orangered,-2px -1px 0 cyan'
+  const color1 = '#7bb38d'
+  const color2 = '#71a381'
+  resume.css3dObject.element.style.background = `repeating-linear-gradient(
+        45deg,
+        #000,
+        #888 10px,
+        #000 10px,
+        #444 20px
+    )`
+
+
+
+
   let cube = new GLTFLoader().setPath("../threejs/models/");
   cube.load("venice.glb", function (gltf) {
     const { animations } = gltf;
@@ -134,15 +318,39 @@
       n.receiveShadow = true;
       if(n.material.map) n.material.map.anisotropy = 16;
     }});
-    cube.scale.set(.01,.01,.01)
-    // mixer = new THREE.AnimationMixer(cube);
-    // animations.forEach( function ( clip ) {
-    //   mixer.clipAction( clip ).play();
-    // } );
-    // animations.clampWhenFinished = true;
-    scene.add(cube);
+    cube.scale.set(.0001,.00001,.00001)
+    cube.position.set(-3,-4,2)
   });
 
+  let gameWorld = new GLTFLoader().setPath("../threejs/models/");
+  gameWorld.load("MaxDeaconVR_gamelevel.glb", function (gltf) {
+    const { animations } = gltf;
+    gameWorld = gltf.scene;
+
+    gameWorld.traverse(n => { if ( n.isMesh ) {
+      n.castShadow = true;
+      n.receiveShadow = true;
+      if(n.material.map) n.material.map.anisotropy = 16;
+    }});
+    gameWorld.scale.set(1,1,1)
+    gameWorld.position.set(-3,-400,2)
+    // gameWorld.rotation.y = 1
+  });
+
+  let room = new GLTFLoader().setPath("../threejs/models/90sRoom/");
+  room.load("scene.gltf", function (gltf) {
+    const { animations } = gltf;
+    room = gltf.scene;
+
+    room.traverse(n => { if ( n.isMesh ) {
+      n.castShadow = true;
+      n.receiveShadow = true;
+      if(n.material.map) n.material.map.anisotropy = 16;
+    }});
+    room.scale.set(10,10,10)
+    room.position.set(0,-14,12)
+    scene.add(room)
+  });
   let milkbox = new GLTFLoader().setPath("../threejs/models/");
   milkbox.load("milk_box.glb", function (gltf) {
     milkbox = gltf.scene;
@@ -158,38 +366,36 @@
     milkbox2.position.set(1,2,0)
     scene.add(milkbox2);
   })
-  // cube = loader;
 
-  // function update() {
-  //   // dt = (Date.now()-lastframe)/1000
-  //   // lastframe = Date.now()
-  //   //
-  //   //   mixer.update(clock.getDelta())
-  //
-  //
-  //   renderer.render( scene, camera );
-  // }
 
-  // cube = new THREE.Mesh(geometry, material)
-  // cube.position.set(0, 0.5, -10)
-  // scene.add(cube)
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-  // scene.add(ambientLight);
-  const hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 2);
-  scene.add(hemiLight)
-  let light = new THREE.SpotLight(0xffa95c,4);
-  light.position.set(-50,50,50);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, .35);
+  scene.add(ambientLight);
+  let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1);
+  let hemisLight = new THREE.HemisphereLight(0x0c1445, 0x4c408e, .4)
+  let light = new THREE.PointLight( 0x88ff88,.6);
+  light.position.set(-9,-4,3);
   light.castShadow = true;
   light.shadow.bias = -0.0001;
   light.shadow.mapSize.width = 1024*4;
   light.shadow.mapSize.height = 1024*4;
-  scene.add( light );
+
+  let light2 = new THREE.SpotLight(0xffa95c,2);
+  light2.position.set(-50,50,50);
+  light2.castShadow = true;
+  light2.shadow.bias = -0.0001;
+  light2.shadow.mapSize.width = 1024*4;
+  light2.shadow.mapSize.height = 1024*4;
+
+
+  // scene.add( rectLight1 );
+  // scene.add( new RectAreaLightHelper( rectLight1 ) );
   window.addEventListener('resize', onWindowResize, false)
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
+    // camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
-    render()
+    renderer2.setSize(window.innerWidth, window.innerHeight)
   }
 
 
@@ -213,18 +419,39 @@
 
   const animationScripts = []
 
-  //add an animation that flashes the cube through 100 percent of scroll
+  //tv flicker
   animationScripts.push({
     start: 0,
-    end: 132,
+    end: 40,
     func: () => {
-      milkbox.rotation.y += 0.01
-      milkbox2.rotation.y -= 0.01
-        light.position.set(
-                camera.position.x + 10,
-                camera.position.y + 10,
-                camera.position.z + 10,
-        );
+        let g =  light.color.g
+        g -= .25
+        if (g <= 0) {
+          g = .9
+        }
+        light.color.g = g
+      }
+
+  })
+  animationScripts.push({
+    start: 46,
+    end: 48,
+    func: () => {
+      scene.add(gameWorld)
+      camera.lookAt(gameWorld.position)
+      camera.position.set(-2,-400,37)
+
+    // camera.position.x = lerp(gameWorld.position,499, scalePercent(90,300))
+    // camera.position.y = lerp(3,-20, scalePercent(91,140))
+      // camera.lookAt(-5,50,50)
+    // camera.position.z = lerp(21,30,  scalePercent(122,300))
+      light2.position.set(
+              camera.position.x + 10,
+              camera.position.y + 10,
+              camera.position.z + 10,
+      );
+
+
     }
   })
 
@@ -233,63 +460,146 @@
     start: 0,
     end: 40,
     func: () => {
-      camera.lookAt(cube.position)
-      camera.position.set(0, 1, 2)
-      cube.position.z = lerp(-10, 0, scalePercent(0, 40))
-      //console.log(cube.position.z)
+      // root.add(background)
+      scene.add( light, hemisLight);
+      scene.remove(cube, hemiLight, light2);
+
+
+      // camera.position.set(10, 1, 2)
+      camera.lookAt(light.position)
+      resume.position.set(-3,-22,1)
+      // camera.rotation.y = 0
+      // light.position.set(-9,-4,3);
+     background.position.y = lerp(-10,73, scalePercent(0,40))
+      camera.position.y = lerp(4, -2, scalePercent(0, 32))
+      // camera.position.y = lerp(-1, 11, scalePercent(24, 40))
+      camera.position.x = lerp(2, 2, scalePercent(0, 32))
+      camera.position.z = lerp(21, 8, scalePercent(0, 32))
+      // camera.position.y = lerp(0,2, scalePercent(33,40))
+
     },
   })
 
-  //add an animation that rotates the cube between 40-60 percent of scroll
-  animationScripts.push({
-    start: 40,
-    end: 60,
-    func: () => {
-      camera.lookAt(cube.position)
-      camera.position.set(0, 1, 2)
-      //auto rotate
-      cube.rotation.z = lerp(0, Math.PI, scalePercent(40, 60))
-      //console.log(cube.rotation.z)
-    },
-  })
-
-  //add an animation that moves the camera between 60-80 percent of scroll
-  animationScripts.push({
-    start: 60,
-    end: 80,
-    func: () => {
-      //auto rotate
-      camera.position.x = lerp(0, 5, scalePercent(60, 80))
-      camera.position.y = lerp(1, 5, scalePercent(60, 80))
-      camera.lookAt(cube.position)
-      //console.log(camera.position.x + " " + camera.position.y)
-    },
-  })
-
-  //add an animation that auto rotates the cube from 80 percent of scroll
-  animationScripts.push({
-    start: 80,
-    end: 101,
-    func: () => {
-      //auto rotate
-      // cube.rotation.x += 0.01
-      // cube.rotation.y += 0.01
-    },
-  })
 
   animationScripts.push({
-    start: 101,
+    start: 48,
     end: 131,
     func: () => {
-      //auto rotate
-      // cube.rotation.x += 0.01
-      // cube.rotation.y += 0.01
-      //attempt to return to previous anim
-      camera.position.x = lerp(0, 5, scalePercent(80, 100))
-      camera.position.y = lerp(1, 5, scalePercent(80, 100))
-      camera.lookAt(cube.position)
+      camera.lookAt(20,20,992)
+      camera.position.set(-6,42,30)
+      cube.scale.set(.07,.07,.07)
+      cube.position.set(-60,-92,39)
+      scene.add(cube, hemiLight, light2);
+      scene.remove(light, hemisLight)
+      root.remove(background)
+
+      // camera.position.set(20,20,190)
+
+
+
+      // resume.position.set(-3,-22,1)
+      // camera.position.x = lerp(2, 3, scalePercent(38, 42))
+      // camera.position.x = lerp(3, -3, scalePercent(43, 82))
+      // camera.position.y = lerp(1, 13, scalePercent(39, 131))
+      // camera.position.z = lerp(21, -1, scalePercent(38, 132))
+      // camera.position.y = lerp(0,2, scalePercent(33,40))
+
+      light2.position.set(
+              camera.position.x + 10,
+              camera.position.y + 10,
+              camera.position.z + 10,
+      );
+
     },
   })
+
+  animationScripts.push({
+    start: 0,
+    end: 33,
+    func: () => {
+      scene.add(resume)
+      resume.position.x = lerp(2, 120, scalePercent(0, 40))
+      resume.position.z = lerp(-183, -10, scalePercent(0, 40))
+      resume.rotation.x = lerp(0,13, scalePercent(0,22))
+
+    },
+    })
+
+  animationScripts.push({
+    start: 40,
+    end: 80,
+    func: () => {
+      // camera.position.set(-2,-400,37)
+
+      camera.position.x = lerp(2,-21, scalePercent(40,51))
+      // camera.position.z = lerp(8,-8, scalePercent(60,80))
+
+    },
+  })
+
+      let spaceTexture = new THREE.TextureLoader().load('../threejs/img/space.jpg');
+      let skybox = new THREE.SphereGeometry(800,800,60);
+      skybox.scale(-1,1,1)
+      let skyMat = new THREE.MeshBasicMaterial({map:spaceTexture});
+      let skyboxMesh = new THREE.Mesh(skybox,skyMat)
+  scene.add(skyboxMesh)
+
+  //add an animation that rotates the cube between 40-60 percent of scroll
+  // animationScripts.push({
+  //   start: 1,
+  //   end: 131,
+  //   func: () => {
+      // scene.add(skyboxMesh)
+      // skyboxMesh.rotation.y += .0005
+      // camera.lookAt(cube.position)
+      // background.scale.set(.0001,.0001)
+
+      // cube.scale.set(1,1,1)
+      // cube.rotate.y = 1
+
+      // camera.position.set(0,5, 8)
+      // auto rotate
+     // camera.position.y = lerp(-20, -10, scalePercent(41, 60))
+     //  console.log(cube.rotation.z)
+  //   },
+  // })
+
+  //add an animation that moves the camera between 60-80 percent of scroll
+  // animationScripts.push({
+  //   start: 60,
+  //   end: 80,
+  //   func: () => {
+  //     //auto rotate
+  //     camera.position.x = lerp(0, 5, scalePercent(60, 80))
+  //     camera.position.y = lerp(1, 5, scalePercent(60, 80))
+  //     //console.log(camera.position.x + " " + camera.position.y)
+  //   },
+  // })
+
+  //add an animation that auto rotates the cube from 80 percent of scroll
+  // animationScripts.push({
+  //   start: 80,
+  //   end: 101,
+  //   func: () => {
+  //     //auto rotate
+  //     // cube.rotation.x += 0.01
+  //     // cube.rotation.y += 0.01
+  //   },
+  // })
+
+  // animationScripts.push({
+  //   start: 80,
+  //   end: 131,
+  //   func: () => {
+  //     //auto rotate
+  //     // cube.rotation.x += 0.01
+  //     // cube.rotation.y += 0.01
+  //     //attempt to return to previous anim
+  //     camera.position.x = lerp(5, 15, scalePercent(80, 100))
+  //     camera.position.y = lerp(5, 15, scalePercent(80, 100))
+  //     // camera.lookAt(cube.position)
+  //   },
+  // })
   function playScrollAnimations() {
     animationScripts.forEach((a) => {
       if (scrollPercent >= a.start && scrollPercent < a.end) {
@@ -305,27 +615,25 @@
     scrollPercent =
             ((document.documentElement.scrollTop || document.body.scrollTop) /
                     ((document.documentElement.scrollHeight || document.body.scrollHeight) -
-                            document.documentElement.clientHeight)) * 131
+                            document.documentElement.clientHeight)) * 300
     document.getElementById('scrollProgress').innerText =
-            'Scroll Progress : ' + scrollPercent.toFixed(2)
+            'Scroll : ' + scrollPercent.toFixed(2)
   }
 
-  // const stats = new Stats()
-  // document.body.appendChild(stats.dom)
 
   function animate() {
-    // var delta = clock.getDelta();
     requestAnimationFrame(animate)
-    // requestAnimationFrame( update );
     playScrollAnimations()
-    // update()
     render()
-
-    // stats.update();
   }
+
+
+
+
 
   function render() {
     renderer.render(scene, camera)
+    renderer2.render(scene, camera)
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' })

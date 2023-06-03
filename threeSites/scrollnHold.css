@@ -1,18 +1,16 @@
-:root{
-    --bg-gradient: linear-gradient(to bottom,  #11e8bb 0%,#8200c9 100%);
-}
 #typeBar {
     padding: 2rem 4rem;
     width: 40%;
     margin-left: auto;
     margin-right: auto;
     background: rgba(42, 43, 56, .3);
-    border: 0.2rem solid var(--bg-gradient);
+    border: 0.2rem solid black;
     -webkit-backdrop-filter: blur(104px);
     backdrop-filter: blur(104px);
     border-radius: 2rem;
 }
 
-html {
-    background: var(--bg-gradient);
+body {
+    background: #242424;
 }
+
