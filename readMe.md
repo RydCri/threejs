@@ -1,3 +1,2 @@
-# Another threejs test
+# This is a repo for erratic webGL projects
 
-Pretty rough stuff, wouldn't recommend looking
