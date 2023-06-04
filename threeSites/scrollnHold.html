@@ -5,122 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ThreeJS</title>
   <link rel="stylesheet" href="scrollnHold.css">
-  <style>
-    a {
-      color: #8ff;
-    }
 
-    #menu {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .element {
-      width: 120px;
-      height: 160px;
-      box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
-      border: 1px solid rgba(127,255,255,0.25);
-      font-family: Helvetica, sans-serif;
-      text-align: center;
-      line-height: normal;
-      cursor: default;
-    }
-
-    .element:hover {
-      box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
-      border: 1px solid rgba(127,255,255,0.75);
-    }
-
-    .element .number {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 12px;
-      color: rgba(127,255,255,0.75);
-    }
-
-    .element .symbol {
-      position: absolute;
-      top: 40px;
-      left: 0px;
-      right: 0px;
-      font-size: 60px;
-      font-weight: bold;
-      color: rgba(255,255,255,0.75);
-      text-shadow: 0 0 10px rgba(0,255,255,0.95);
-    }
-
-    .element .details {
-      position: absolute;
-      bottom: 15px;
-      left: 0px;
-      right: 0px;
-      font-size: 12px;
-      color: rgba(127,255,255,0.75);
-    }
-
-    button {
-      color: rgba(127,255,255,0.75);
-      background: transparent;
-      outline: 1px solid rgba(127,255,255,0.75);
-      border: 0px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: rgba(0,255,255,0.5);
-    }
-
-    button:active {
-      color: #000000;
-      background-color: rgba(0,255,255,0.75);
-    }
-    body {
-      overflow-x: hidden;
-      margin: 0px;
-      font-family: monospace;
-      color: white;
-    }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
-
-    main {
-      width: 100vw;
-      height: 200vw;
-      z-index: 99;
-      position: absolute;
-      justify-content: center;
-      text-align: center;
-      pointer-events: none;
-      font-size: 5vh;
-    }
-
-    section {
-      min-height: 100vh;
-      padding: 20px;
-      font-size: 4vh;
-    }
-
-    #scrollProgress {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      z-index: 99;
-      font-size: 3vh;
-    }
-
-    #vwSrcLink {
-      position: fixed;
-      z-index: 99;
-    }
-  </style>
   <script type="importmap">
             {
                 "imports": {
@@ -158,56 +43,34 @@
 <!--    <p>The camera position is now changing</p>-->
 <!--  </section>-->
 
-<!--  <section>-->
-<!--    <h2>You are at the bottom</h2>-->
-<!--    <p>sdlghagds;</p>-->
-<!--    <p>Now you can scroll back to the top to reverse the animation</p>-->
-<!--  </section>-->
-<!--  <section>-->
-<!--    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores eos nesciunt qui quisquam? Aperiam-->
-<!--      atque aut debitis ducimus, excepturi fuga hic incidunt libero nam obcaecati quasi quo quos voluptate.</p>-->
-<!--  </section>-->
 </main>
 
 <div id="webgl"></div>
 <div id="cssgl"></div>
 <script type="module">
   import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
-  import Stats from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/libs/stats.module.js";
   import {GLTFLoader} from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
-  import { RoomEnvironment } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/environments/RoomEnvironment.js';
   import { RectAreaLightUniformsLib } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
-  import { RectAreaLightHelper } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/helpers/RectAreaLightHelper.js';
   import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS3DRenderer.js';
-  import { CSS2DRenderer, CSS2DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS2DRenderer.js';
 
 
-  // let cube;
+
+
   let mixer;
-  let idle,dt,lastframe= Date.now();
   let clock = new THREE.Clock();
   const scene = new THREE.Scene()
   RectAreaLightUniformsLib.init();
 
-
-
-  const gridHelper = new THREE.GridHelper(10, 10, 0xaec6cf, 0xaec6cf)
-  // scene.add(gridHelper)
-
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
-
+//Render here
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
   renderer.setSize(window.innerWidth, window.innerHeight)
-  // renderer.setPixelRatio( 0.6 );
-  // renderer.autoClear = false;
-  // renderer.setClearColor( 0xffffff, 0);
   renderer.shadowMap.enabled = true;
-  // document.body.appendChild(renderer.domElement)
+  renderer.shadowMap.needsUpdate = true;
   document.getElementById('webgl').appendChild(renderer.domElement)
 
   const renderer2 = new CSS3DRenderer({antialias: true,alpha: true});
   renderer2.setSize(window.innerWidth, window.innerHeight);
-  // renderer2.autoClear = false;
   document.getElementById('cssgl').appendChild(renderer2.domElement);
 
   function makeCSSObject(type, width, height) {
@@ -233,43 +96,64 @@
     });
     var geometry = new THREE.BoxGeometry( width, height, 0 );
     var mesh = new THREE.Mesh( geometry );
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    obj.lightShadowMesh = mesh
     obj.add( mesh );
 
     return obj
   }
 
-  var tv = makeCSSObject('div',0,1)
-  tv.css3dObject.element.textContent = 'Check out my projects'
-  tv.css3dObject.element.style.fontSize = '5px'
-  tv.css3dObject.element.style.position = 'fixed'
   var resume = makeCSSObject('div',0,2)
-  resume.css3dObject.element.textContent = "Jason Crites - Web Developer"
   resume.css3dObject.element.style.opacity = "1"
   resume.css3dObject.element.style.padding = '1px'
   resume.css3dObject.element.style.fontSize = '10px'
-  resume.css3dObject.element.style.boxShadow = '2px 1px 0 orangered,-2px -1px 0 cyan'
-  const color1 = '#7bb38d'
-  const color2 = '#71a381'
-  resume.css3dObject.element.style.background = `repeating-linear-gradient(
-        45deg,
-        #000,
-        #888 10px,
-        #000 10px,
-        #444 20px
-    )`
-  // loadModel() {
-  //   const loader = new GLTFLoader().setPath("../threejs/models/");
-  //   loader.load("milk_box.glb", (gltf) => {
-  //     let mesh = gltf.scene;
-  //     this.add(mesh);
-  //     this.scale.setScalar(this.cubeSize)
-  //     return mesh
-  //   });
-  // }
 
+  var resumeTitle = makeCSSObject('h3',0,2)
+  resumeTitle.css3dObject.element.style.background = `repeating-linear-gradient(
+        45deg,
+        #222 10px,
+        #000 20px
+    )`
+  resumeTitle.css3dObject.element.textContent = "Jason Crites - Web Developer"
+  resumeTitle.css3dObject.element.style.padding = '1px'
+  resumeTitle.css3dObject.element.style.fontSize = '10px'
+  resume.add(resumeTitle)
+
+  var card = makeCSSObject('section',0,2)
+  var container = makeCSSObject('div',0,2)
+  card.add(container)
+
+  var myCity = makeCSSObject('h2',0,2)
+  myCity.css3dObject.element.textContent = 'San Antonio, TX'
+
+  var svgAlamo = makeCSSObject('img',0,2)
+  svgAlamo.css3dObject.element.src = './img/alamo.svg'
+  svgAlamo.position.z = 90
+  svgAlamo.position.y = 10
+  svgAlamo.css3dObject.element.style.height = '50px'
+  svgAlamo.css3dObject.element.style.width = '50px'
+
+  var gitButton = makeCSSObject('button',0,2)
+  gitButton.css3dObject.element.textContent = 'GitHub'
+  gitButton.css3dObject.element.style.cursor = 'pointer'
+  gitButton.css3dObject.element.addEventListener('click',() => {window.location = "https://github.com/RydCri"})
+  gitButton.position.x = -80
+  var linkInButton = makeCSSObject('button',0,2)
+  linkInButton.css3dObject.element.textContent = 'LinkedIn'
+  linkInButton.css3dObject.element.style.cursor = 'pointer'
+  linkInButton.css3dObject.element.addEventListener('click',() => {window.location = "https://www.linkedin.com/in/jason-crites-4b2871272/"})
+  linkInButton.position.x = 0
+  var emailButton = makeCSSObject('button',0,2)
+  emailButton.css3dObject.element.textContent = 'emailMe'
+  emailButton.css3dObject.element.style.cursor = 'pointer'
+  emailButton.css3dObject.element.addEventListener('click',() => {window.location.href = "mailto:jcrites033@gmail.com"})
+  emailButton.position.x = 80
+  var email = makeCSSObject('span',0,2)
+  email.css3dObject.element.textContent = 'jcrites033@gmail.com'
+  email.css3dObject.element.style.fontSize = '7px'
+  email.position.y = 10
+  emailButton.add(email)
+  card.add(gitButton,linkInButton,emailButton)
+
+  //Event Model Class
   class EventModel extends THREE.Mesh {
     constructor(texture,url,hovercolor) {
       super()
@@ -288,7 +172,6 @@
 
     onResize(width, height, aspect) {
       this.cubeSize = (height * aspect) / 5
-      this.scale.setScalar(this.cubeSize * (this.cubeActive ? 1.5 : 1))
     }
 
     onPointerOver(e) {
@@ -298,7 +181,6 @@
 
     onPointerOut(e) {
       this.material.color.set('white')
-      this.material.color.convertSRGBToLinear()
     }
 
     onClick(e) {
@@ -314,7 +196,8 @@
   let hovered = {}
 
   // setup
-  renderer.toneMapping = THREE.ACESFilmicToneMapping
+  // renderer.toneMapping = THREE.ACESFilmicToneMapping
+
   const raycaster = new THREE.Raycaster()
   const mouse = new THREE.Vector2()
 
@@ -352,6 +235,7 @@
         const hoveredItem = hovered[key]
         if (hoveredItem.object.onPointerOver) hoveredItem.object.onPointerOut(hoveredItem)
         delete hovered[key]
+
       }
     })
 
@@ -361,8 +245,11 @@
         hovered[hit.object.uuid] = hit
         if (hit.object.onPointerOver) hit.object.onPointerOver(hit)
       }
+        //this is very fun but disabling for now
+       // hit.object.rotation.y += 0.001
       // Call onPointerMove
       if (hit.object.onPointerMove) hit.object.onPointerMove(hit)
+
     })
   })
 
@@ -373,74 +260,48 @@
     })
   })
 
-  // render-loop, called 60-times/second
-  function boxanimate(t) {
-    requestAnimationFrame(animate)
-    scene.traverse((obj) => {
-      if (obj.render) obj.render(t)
-    })
-    renderer.render(scene, camera)
-  }
-
-  boxanimate()
 
 
 
-let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri','cyan')
-  let linkedIn = new EventModel('./img/linkedin.jpg','https://linkedin.com','lightblue')
-
-    // let socialLinks = makeCSSObject('div', 1, 1)
-  // // socialLinks.css3dObject.element.textContent = "Check out Ma Links!"
-  // // socialLinks.position.z = 20
-  // // socialLinks.css3dObject.element.style.opacity = "1"
-  // // socialLinks.css3dObject.element.style.padding = '1px'
-  // //
-  // // socialLinks.css3dObject.element.style.background = `repeating-linear-gradient(
-  // //       45deg,
-  // //       ${color1},
-  // //       ${color1} 10px,
-  // //       ${color2} 10px,
-  // //       ${color2} 20px
-  // //   )`
-  // //
-  // // const gitButton = makeCSSObject('button', 2, 2)
-  // // gitButton.css3dObject.element.style.border = '2px solid #fa5a85'
-  // // // gitButton.css3dObject.element.style.width = '5px'
-  // // gitButton.css3dObject.element.textContent = "GitHub"
-  // // gitButton.css3dObject.element.addEventListener('click', () => window.location = 'https://github.com/RydCri')
-  // // gitButton.position.y = -20
-  // // gitButton.position.z = 10
-  // // gitButton.position.x = -30
-  // // gitButton.css3dObject.element.style.background = '#e64e77'
-  // // socialLinks.add(gitButton)
-  // // const linkdButton = makeCSSObject('button', 2, 2)
-  // // linkdButton.css3dObject.element.style.border = '2px solid #fa5a85'
-  // // // linkdButton.css3dObject.element.style.width = '5px'
-  // // linkdButton.css3dObject.element.textContent = "LinkdIn"
-  // // linkdButton.css3dObject.element.addEventListener('click', () => window.location = 'https://github.com/RydCri')
-  // // linkdButton.position.y = -20
-  // // linkdButton.position.z = 10
-  // // linkdButton.position.x = 40
-  // // linkdButton.css3dObject.element.style.background = '#e64e77'
-  // // socialLinks.add(linkdButton)
+let gitHub = new EventModel('./img/github.png','https://github.com/RydCri','magenta')
+  let linkedIn = new EventModel('./img/linkedin.jpg','https://www.linkedin.com/in/jason-crites-4b2871272/','cyan')
 
 
 
-  let cube = new GLTFLoader().setPath("../threejs/models/");
-  cube.load("venice.glb", function (gltf) {
+  let spaceTexture = new THREE.TextureLoader().load('./img/nebula.jpg');
+  let skybox = new THREE.SphereGeometry(800,800,60);
+  let skyMat = new THREE.MeshBasicMaterial({map:spaceTexture});
+  let skyboxMesh = new THREE.Mesh(skybox,skyMat)
+
+let orangeBox = new THREE.SphereGeometry(800,800,60);
+let orangeTexture = new THREE.TextureLoader().load('./img/orangesky.jpeg');
+let orangeMat = new THREE.MeshBasicMaterial({map:orangeTexture});
+let orangeBoxMesh = new THREE.Mesh(orangeBox, orangeMat)
+
+  let fancyTexture = new THREE.TextureLoader().load('./img/grassy.jpg');
+  let fancybox = new THREE.SphereGeometry(800,800,60);
+  let fancyMat = new THREE.MeshBasicMaterial({map:fancyTexture});
+  let fancyMesh = new THREE.Mesh(fancybox,fancyMat)
+
+
+
+  let venice = new GLTFLoader().setPath("../threejs/models/");
+  //Model Low Poly Cityscene Venice by Watse D'haene @ Sketchfab
+  venice.load("venice.glb", function (gltf) {
     const { animations } = gltf;
-    cube = gltf.scene;
+    venice = gltf.scene;
 
-    cube.traverse(n => { if ( n.isMesh ) {
+    venice.traverse(n => { if ( n.isMesh ) {
       n.castShadow = true;
       n.receiveShadow = true;
       if(n.material.map) n.material.map.anisotropy = 16;
     }});
-    cube.scale.set(.0001,.00001,.00001)
-    cube.position.set(-3,-4,2)
+    venice.scale.set(.0001,.00001,.00001)
+    venice.position.set(-3,-4,2)
   });
 
   let gameWorld = new GLTFLoader().setPath("../threejs/models/");
+  //Model Low Poly Game Level by MaxDeaconVR @ Sketchfab
   gameWorld.load("MaxDeaconVR_gamelevel.glb", function (gltf) {
     const { animations } = gltf;
     gameWorld = gltf.scene;
@@ -452,10 +313,28 @@ let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri',
     }});
     gameWorld.scale.set(1,1,1)
     gameWorld.position.set(-3,-400,2)
-    scene.add(gameWorld)
   });
 
+
+  let portal = new GLTFLoader().setPath("../threejs/models/portal/");
+  portal.load("scene.gltf", function (gltf) {
+    const { animations } = gltf;
+    portal = gltf.scene;
+    mixer = new THREE.AnimationMixer(portal);
+    animations.forEach( function ( clip ) {
+      mixer.clipAction( clip ).play();
+    } );
+    animations.clampWhenFinished = true;
+  });
+
+  let portalLight = new THREE.PointLight( 0x660044, 15 );
+  portalLight.castShadow = true;
+  portalLight.shadow.bias = -0.001;
+  portalLight.shadow.mapSize.width = 1024*4;
+  portalLight.shadow.mapSize.height = 1024*4;
+
   let room = new GLTFLoader().setPath("../threejs/models/90sRoom/");
+  //Model 90-th Retro Room with Dendy by brysew @ Sketchfab
   room.load("scene.gltf", function (gltf) {
     const { animations } = gltf;
     room = gltf.scene;
@@ -467,24 +346,16 @@ let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri',
     }});
     room.scale.set(10,10,10)
     room.position.set(0,-14,12)
-    scene.add(room)
   });
 
 
-  let milkbox2 = new GLTFLoader().setPath("../threejs/models/");
-    milkbox2.load("milk_box.glb", function (gltf) {
-    milkbox2 = gltf.scene;
-    milkbox2.scale.set(10,10,10)
-    milkbox2.position.set(1,2,0)
-    scene.add(milkbox2);
-  })
 
 
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, .35);
-  scene.add(ambientLight);
-  let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1);
-  let hemisLight = new THREE.HemisphereLight(0x0c1445, 0x4c408e, .4)
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, .2);
+  let hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, .1);
+  let hemisLight = new THREE.HemisphereLight(0x0c1445, 0x4c408e, .7)
   let light = new THREE.PointLight( 0x88ff88,.6);
   light.position.set(-9,-4,3);
   light.castShadow = true;
@@ -492,7 +363,7 @@ let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri',
   light.shadow.mapSize.width = 1024*4;
   light.shadow.mapSize.height = 1024*4;
 
-  let light2 = new THREE.SpotLight(0xffa95c,2);
+  let light2 = new THREE.SpotLight(0xffa95c,1);
   light2.position.set(-50,50,50);
   light2.castShadow = true;
   light2.shadow.bias = -0.0001;
@@ -512,28 +383,20 @@ let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri',
 
 
 
-  /* Liner Interpolation
-   * lerp(min, max, ratio)
-   * eg,
-   * lerp(20, 60, .5)) = 40
-   * lerp(-20, 60, .5)) = 20
-   * lerp(20, 60, .75)) = 50
-   * lerp(-20, -10, .1)) = -.19
-   */
   function lerp(x, y, a) {
     return (1 - a) * x + a * y
   }
 
-  // Used to fit the lerps to start and end at specific scrolling percentages
   function scalePercent(start, end) {
     return (scrollPercent - start) / (end - start)
   }
 
   const animationScripts = []
 
+
   //tv flicker
   animationScripts.push({
-    start: 0,
+    start:0,
     end: 40,
     func: () => {
         let g =  light.color.g
@@ -549,16 +412,21 @@ let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri',
     start: 0,
     end: 40,
     func: () => {
-      scene.add( light, hemisLight, skyboxMesh);
-      scene.remove(cube, hemiLight, light2);
+      scene.remove(venice, hemiLight, light2, portalLight);
+      scene.add( ambientLight, light, hemisLight, room, skyboxMesh, orangeBoxMesh, fancyMesh);
+      skybox.scale(-1,1,1)
+      orangeBox.scale(-1,1,1)
+      fancybox.scale(-1,1,1)
+      skyboxMesh.visible = true
+      orangeBoxMesh.visible = false
+      fancyMesh.visible = false
       camera.lookAt(light.position)
-      // socialLinks.position.set(-53,-22,-25)
 
       camera.position.y = lerp(4, -2, scalePercent(0, 33))
       camera.position.z = lerp(21, 8, scalePercent(0, 32))
       camera.position.x = lerp(2, 2, scalePercent(0, 32))
     },
-  })
+  });
 
   animationScripts.push({
     //tv zoom
@@ -567,106 +435,92 @@ let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri',
     func: () => {
       camera.position.x = lerp(2,-11, scalePercent(33,47))
     },
-  })
-  animationScripts.push({
-    start: 47,
-    end: 47,
-    func: () => {
-      scene.remove(skyboxMesh)
-    },
-  })
+  });
+
 
   animationScripts.push({
     //gameWorld scene
     start: 48,
     end: 107,
     func: () => {
-      scene.add(skyboxMesh)
-      scene.add(socialLinks)
-      scene.add(linkedIn)
-      skyboxMesh.rotation.y += .001
+      scene.add(ambientLight,gameWorld, gitHub,linkedIn,portal)
+      skyboxMesh.visible = false
+      orangeBoxMesh.visible = true
 
-      socialLinks.position.set(31,-400,28)
-      linkedIn.position.set(28,-400,30)
+      gitHub.rotation.y += .001
+      linkedIn.rotation.y += -.002
+      orangeBoxMesh.rotation.y += .0001
 
-      // milkbox2.position.set(34,-399,34)
+      gitHub.position.set(26,-403,28)
+      linkedIn.position.set(28,-403,30)
+      portal.position.set(22.3,-407.2,25.5)
+      portal.scale.set(.6,.6,.6)
+      portal.rotation.y = 0.8
+
+
+      gitHub.position.y = lerp(-403,-400, scalePercent(42,87))
+      linkedIn.position.y = lerp(-403,-400, scalePercent(33,87))
+
       gameWorld.rotation.y = 1
-      socialLinks.rotation.y = 2
 
 
       camera.lookAt(gameWorld.position)
-      // camera.lookAt(socialLinks.position)
-
-      camera.position.set(12,-400,37)
-      milkbox2.rotation.y += .01
 
       camera.position.z = lerp(36,29, scalePercent(49,87))
       camera.position.x = lerp(39,28, scalePercent(49,87))
       camera.position.y = lerp(-400,-400, scalePercent(49,87))
-      // camera.lookAt(-5,50,50)
-    // camera.position.z = lerp(21,30,  scalePercent(122,300))
-      light2.position.set(
-              camera.position.x + 10,
-              camera.position.y + 10,
-              camera.position.z + 10,
-      );
-
-
     }
-  })
+  });
+
   animationScripts.push({
-    //look at github box
-    start: 60,
-    end: 75,
+    //fancy skybox rotation
+    start: 91,
+    end: 300,
     func: () => {
-      camera.lookAt(socialLinks.position)
+      fancyMesh.rotation.y += .0001
     },
-  })
+  });
+
+
 
   animationScripts.push({
-    //look at linkedin box
-    start: 81,
-    end: 92,
+    // Door animation
+    start: 91,
+    end: 110,
     func: () => {
-      camera.lookAt(linkedIn.position)
+      scene.add(portalLight,ambientLight, hemiLight, light2);
+      scene.remove(gameWorld)
+      orangeBoxMesh.visible = false
+      fancyMesh.visible = true
+      portalLight.position.set(26,-387,28)
+      portal.position.y = lerp(-407.2,-401, scalePercent(75, 105));
     },
-  })
+  });
 
   animationScripts.push({
-    //look at linkedin box
-    start: 95,
-    end: 100,
+    start: 111,
+    end: 300,
     func: () => {
-scene.add(portal)
-    },
-  })
+      scene.remove(room,gameWorld)
+      scene.remove(light, portalLight)
+      scene.add(venice,ambientLight);
 
-
-  animationScripts.push({
-    start: 108,
-    end: 131,
-    func: () => {
-      camera.lookAt(20,20,992)
+      camera.lookAt(venice.position)
       camera.position.set(-6,42,30)
-      cube.scale.set(.07,.07,.07)
-      cube.position.set(-60,-92,39)
-      scene.add(cube, hemiLight, light2);
-      scene.remove(light, hemisLight, skyboxMesh)
+      venice.scale.set(.07,.07,.07)
+      venice.position.y = 33
+      venice.rotation.y += .0007
+      fancyMesh.rotation.y += .0001
 
-      // camera.position.set(20,20,190)
-
-
-
-      // resume.position.set(-3,-22,1)
-      // camera.position.x = lerp(2, 3, scalePercent(38, 42))
-      // camera.position.x = lerp(3, -3, scalePercent(43, 82))
-      // camera.position.y = lerp(1, 13, scalePercent(39, 131))
-      // camera.position.z = lerp(21, -1, scalePercent(38, 132))
-      // camera.position.y = lerp(0,2, scalePercent(33,40))
+      camera.position.x = lerp(183,-6, scalePercent(100,131))
+      camera.position.z = lerp(223, -30, scalePercent(100,131))
+      camera.position.y = lerp(31, 133, scalePercent(100,131))
+      camera.position.x = lerp(-6, -15, scalePercent(134,231))
+      camera.position.y = lerp(133,-121, scalePercent(132,231))
 
       light2.position.set(
               camera.position.x + 10,
-              camera.position.y + 10,
+              camera.position.y + 20,
               camera.position.z + 10,
       );
 
@@ -678,78 +532,27 @@ scene.add(portal)
     end: 33,
     //resume CSS3D
     func: () => {
-      scene.add(resume)
+      scene.add(resume,card,myCity,svgAlamo)
+
       resume.position.x = lerp(2, 120, scalePercent(0, 33))
       resume.position.z = lerp(-183, -10, scalePercent(0, 33))
       resume.rotation.x = lerp(0,13, scalePercent(0,22))
 
+      card.position.x = lerp(2, 120, scalePercent(0, 33))
+      card.position.z = lerp(-183, -10, scalePercent(0, 33))
+      card.position.y = -112
 
+      svgAlamo.position.x = lerp(6, 120, scalePercent(0, 33))
+      svgAlamo.position.z = lerp(-183, -10, scalePercent(0, 33))
+      svgAlamo.position.y = -53
+
+      myCity.position.x = lerp(-1, 101, scalePercent(0, 33))
+      myCity.position.z = lerp(-180, -10, scalePercent(0, 33))
+      myCity.position.y = -40
     },
     })
 
 
-      let spaceTexture = new THREE.TextureLoader().load('./img/nebula.jpg');
-      let skybox = new THREE.SphereGeometry(800,800,20);
-      skybox.scale(-1,1,1)
-      let skyMat = new THREE.MeshBasicMaterial({map:spaceTexture});
-      let skyboxMesh = new THREE.Mesh(skybox,skyMat)
-
-  //add an animation that rotates the cube between 40-60 percent of scroll
-  // animationScripts.push({
-  //   start: 1,
-  //   end: 131,
-  //   func: () => {
-      // scene.add(skyboxMesh)
-      // skyboxMesh.rotation.y += .0005
-      // camera.lookAt(cube.position)
-      // background.scale.set(.0001,.0001)
-
-      // cube.scale.set(1,1,1)
-      // cube.rotate.y = 1
-
-      // camera.position.set(0,5, 8)
-      // auto rotate
-     // camera.position.y = lerp(-20, -10, scalePercent(41, 60))
-     //  console.log(cube.rotation.z)
-  //   },
-  // })
-
-  //add an animation that moves the camera between 60-80 percent of scroll
-  // animationScripts.push({
-  //   start: 60,
-  //   end: 80,
-  //   func: () => {
-  //     //auto rotate
-  //     camera.position.x = lerp(0, 5, scalePercent(60, 80))
-  //     camera.position.y = lerp(1, 5, scalePercent(60, 80))
-  //     //console.log(camera.position.x + " " + camera.position.y)
-  //   },
-  // })
-
-  //add an animation that auto rotates the cube from 80 percent of scroll
-  // animationScripts.push({
-  //   start: 80,
-  //   end: 101,
-  //   func: () => {
-  //     //auto rotate
-  //     // cube.rotation.x += 0.01
-  //     // cube.rotation.y += 0.01
-  //   },
-  // })
-
-  // animationScripts.push({
-  //   start: 80,
-  //   end: 131,
-  //   func: () => {
-  //     //auto rotate
-  //     // cube.rotation.x += 0.01
-  //     // cube.rotation.y += 0.01
-  //     //attempt to return to previous anim
-  //     camera.position.x = lerp(5, 15, scalePercent(80, 100))
-  //     camera.position.y = lerp(5, 15, scalePercent(80, 100))
-  //     // camera.lookAt(cube.position)
-  //   },
-  // })
   function playScrollAnimations() {
     animationScripts.forEach((a) => {
       if (scrollPercent >= a.start && scrollPercent < a.end) {
@@ -761,7 +564,6 @@ scene.add(portal)
   let scrollPercent = 0
 
   document.body.onscroll = () => {
-    //calculate the current scroll progress as a percentage
     scrollPercent =
             ((document.documentElement.scrollTop || document.body.scrollTop) /
                     ((document.documentElement.scrollHeight || document.body.scrollHeight) -
@@ -775,6 +577,9 @@ scene.add(portal)
     requestAnimationFrame(animate)
     playScrollAnimations()
     render()
+    if (mixer) {
+      mixer.update(clock.getDelta());
+    }
   }
 
 
@@ -788,7 +593,6 @@ scene.add(portal)
 
   window.scrollTo({ top: 0, behavior: 'smooth' })
   animate()
-
 </script>
 </body>
 </html>

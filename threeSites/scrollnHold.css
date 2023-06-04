@@ -1,6 +1,6 @@
-#typeBar {
+section {
     padding: 2rem 4rem;
-    width: 40%;
+    width: 20%;
     margin-left: auto;
     margin-right: auto;
     background: rgba(42, 43, 56, .3);
@@ -9,9 +9,27 @@
     backdrop-filter: blur(104px);
     border-radius: 2rem;
 }
-
 body {
     background: #242424;
+    color: white;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+
+#scrollProgress {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 99;
+    font-size: 3vh;
+}
+* {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #webgl {
@@ -27,4 +45,91 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+button {
+    color:white;
+    width: 70px;
+    height: 30px;
+    line-height: 4px;
+    padding: 0;
+    border: none;
+    background: rgb(255,27,0);
+    background: linear-gradient(0deg, rgba(255,27,0,1) 0%, rgba(251,75,2,1) 100%);
+    border-radius: 4px;
+    text-shadow: 1px 1px 0 black;
+}
+span{color:rgba(251,75,2,1)}
+button:hover{
+    color: #f0094a;
+    background: transparent;
+    box-shadow:none;
+}
+
+button:before,
+button:after{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    height:2px;
+    width:0;
+    background: cyan;
+    box-shadow:
+            -1px -1px 5px 0px #fff,
+            7px 7px 20px 0px #0003,
+            4px 4px 5px 0px #0002;
+    transition:400ms ease all;
+}
+button:after{
+    right:inherit;
+    top:inherit;
+    left:0;
+    bottom:0;
+}
+button:hover:before,
+button:hover:after{
+    width:100%;
+    transition:700ms ease all;
+}
+
+h3 {
+    text-shadow: 1px 1px 0 orangered;
+    animation: pulse 5s linear infinite;
+}
+h3:hover {
+    box-shadow: 2px 1px 0 orangered,-2px -1px 0 cyan;
+    animation: pulse 5s linear infinite ,tiktok 7s linear infinite;
+}
+
+h2 {
+    text-shadow: 1px 1px 0 black;
+    animation: uppydown 4s linear infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 2px 1px 0 orangered,-2px -1px 0 cyan;
+    }
+    50% {
+        box-shadow: 3px 2px 0 orangered,-3px -2px 0 cyan;
+    }
+    100% {
+        box-shadow: 2px 1px 0 orangered,-2px -1px 0 cyan;
+    }
+}
+
+@keyframes tiktok{
+    0%, 100% {
+        text-shadow: -1.5px -1.5px 0 #0ff, 1.5px 1.5px 0 #f00;
+    }
+    25% {
+        text-shadow: 1.5px 1.5px 0 #0ff, -1.5px -1.5px 0 #f00;
+    }
+    50% {
+        text-shadow: 1.5px -1.5px 0 #0ff, 1.5px -1.5px 0 #f00;
+    }
+    75% {
+        text-shadow: -1.5px 1.5px 0 #0ff, -1.5px 1.5px 0 #f00;
+    }
 }
