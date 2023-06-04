@@ -194,87 +194,44 @@
   const gridHelper = new THREE.GridHelper(10, 10, 0xaec6cf, 0xaec6cf)
   // scene.add(gridHelper)
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
   renderer.setSize(window.innerWidth, window.innerHeight)
   // renderer.setPixelRatio( 0.6 );
-  renderer.autoClear = false;
-  renderer.setClearColor( 0xffffff, 0);
+  // renderer.autoClear = false;
+  // renderer.setClearColor( 0xffffff, 0);
   renderer.shadowMap.enabled = true;
   // document.body.appendChild(renderer.domElement)
   document.getElementById('webgl').appendChild(renderer.domElement)
 
   const renderer2 = new CSS3DRenderer({antialias: true,alpha: true});
-  renderer2.setSize(window.innerWidth, window.innerHeight)
-  // renderer2.setClearColor( 0xffffff, 0);
+  renderer2.setSize(window.innerWidth, window.innerHeight);
   // renderer2.autoClear = false;
-  document.getElementById('cssgl').appendChild(renderer2.domElement)
+  document.getElementById('cssgl').appendChild(renderer2.domElement);
 
-  var root = new THREE.Object3D()
-  root.position.set(1,-40,-60)
-  root.rotation.y = Math.PI;
-  scene.add(root)
-
-  // var tvBox = new THREE.Object3D()
-  // tvBox.position.set(-71,-32,-46)
-  // tvBox.rotation.y = Math.PI;
-  function makeElementObject(type, width, height) {
-    const obj = new THREE.Object3D
-
-    const element = document.createElement( type );
-    element.style.width = width+'px';
-    element.style.height = height+'px';
-    element.style.opacity = 0.999;
-    element.style.boxSizing = 'border-box'
-
-    var css3dObject = new CSS2DObject( element );
-    obj.css3dObject = css3dObject
-    obj.add(css3dObject)
-
-    // make an invisible plane for the DOM element to chop
-    // clip a WebGL geometry with it.
-    var material = new THREE.MeshPhongMaterial({
-      opacity	: 0.15,
-      color	: new THREE.Color( 0x111111 ),
-      blending: THREE.NoBlending,
-      side	: THREE.DoubleSide,
-    });
-    var geometry = new THREE.BoxGeometry( width,height,10);
-    var img = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial
-      map:THREE.ImageUtils.loadTexture('./img/Night_SanAntonio.jpeg')
-    });
-    var mesh = new THREE.Mesh( geometry, img );
-    img.map.needsUpdate = true; //ADDED
-    // mesh.castShadow = true;
-    // mesh.receiveShadow = true;
-    // obj.lightShadowMesh = mesh
-    obj.add( mesh );
-
-    return obj
-  }
   function makeCSSObject(type, width, height) {
     const obj = new THREE.Object3D
 
     const element = document.createElement( type );
     element.style.width = width+'px'*0;
     element.style.height = height+'px'*.01;
-    element.style.opacity = 0.0;
+    element.style.opacity = 0.999;
     element.style.boxSizing = 'border-box'
 
     var css3dObject = new CSS3DObject( element );
     obj.css3dObject = css3dObject
     obj.add(css3dObject)
 
-    // make an invisible plane for the DOM element to chop
-    // clip a WebGL geometry with it.
-    var material = new THREE.MeshPhongMaterial({
-      opacity	: 0.0,
+      var material = new THREE.MeshPhongMaterial({
+      opacity	: 0.15,
       color	: new THREE.Color( 0x911111 ),
       blending: THREE.NoBlending,
       side	: THREE.DoubleSide,
+      emissive: 0x000000,
+      specular: 0x111111,
     });
-    var geometry = new THREE.BoxGeometry( width, height, 1 );
+    var geometry = new THREE.BoxGeometry( width, height, 0 );
     var mesh = new THREE.Mesh( geometry );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -284,11 +241,10 @@
     return obj
   }
 
-  var tv = makeCSSObject('div',10,11)
+  var tv = makeCSSObject('div',0,1)
   tv.css3dObject.element.textContent = 'Check out my projects'
   tv.css3dObject.element.style.fontSize = '5px'
   tv.css3dObject.element.style.position = 'fixed'
-  var background = makeElementObject('div', 250, 200)
   var resume = makeCSSObject('div',0,2)
   resume.css3dObject.element.textContent = "Jason Crites - Web Developer"
   resume.css3dObject.element.style.opacity = "1"
@@ -304,7 +260,169 @@
         #000 10px,
         #444 20px
     )`
+  // loadModel() {
+  //   const loader = new GLTFLoader().setPath("../threejs/models/");
+  //   loader.load("milk_box.glb", (gltf) => {
+  //     let mesh = gltf.scene;
+  //     this.add(mesh);
+  //     this.scale.setScalar(this.cubeSize)
+  //     return mesh
+  //   });
+  // }
 
+  class EventModel extends THREE.Mesh {
+    constructor(texture,url,hovercolor) {
+      super()
+      this._texture = new THREE.TextureLoader().load(texture);
+      this._url = url
+      this._hoverColor = hovercolor
+      this.geometry = new THREE.BoxGeometry()
+      this.material = new THREE.MeshBasicMaterial({ map:this._texture,color: new THREE.Color('white').convertSRGBToLinear() })
+      this.cubeSize = 2
+      this.cubeActive = false
+    }
+
+    render() {
+      this.rotation.x = this.rotation.y += 0.01
+    }
+
+    onResize(width, height, aspect) {
+      this.cubeSize = (height * aspect) / 5
+      this.scale.setScalar(this.cubeSize * (this.cubeActive ? 1.5 : 1))
+    }
+
+    onPointerOver(e) {
+      this.material.color.set(this._hoverColor)
+      this.material.color.convertSRGBToLinear()
+    }
+
+    onPointerOut(e) {
+      this.material.color.set('white')
+      this.material.color.convertSRGBToLinear()
+    }
+
+    onClick(e) {
+    window.location = '' + this._url
+    }
+  }
+
+
+  // state
+  let width = 0
+  let height = 0
+  let intersects = []
+  let hovered = {}
+
+  // setup
+  renderer.toneMapping = THREE.ACESFilmicToneMapping
+  const raycaster = new THREE.Raycaster()
+  const mouse = new THREE.Vector2()
+
+
+  // responsive
+  function resize() {
+    width = window.innerWidth
+    height = window.innerHeight
+    camera.aspect = width / height
+    const target = new THREE.Vector3(0, 0, 0)
+    const distance = camera.position.distanceTo(target)
+    const fov = (camera.fov * Math.PI) / 180
+    const viewportHeight = 2 * Math.tan(fov / 2) * distance
+    const viewportWidth = viewportHeight * (width / height)
+    camera.updateProjectionMatrix()
+    renderer.setSize(width, height)
+    scene.traverse((obj) => {
+      if (obj.onResize) obj.onResize(viewportWidth, viewportHeight, camera.aspect)
+    })
+  }
+
+  window.addEventListener('resize', resize)
+  resize()
+
+  // events
+  window.addEventListener('pointermove', (e) => {
+    mouse.set((e.clientX / width) * 2 - 1, -(e.clientY / height) * 2 + 1)
+    raycaster.setFromCamera(mouse, camera)
+    intersects = raycaster.intersectObjects(scene.children, true)
+
+    // If a previously hovered item is not among the hits we must call onPointerOut
+    Object.keys(hovered).forEach((key) => {
+      const hit = intersects.find((hit) => hit.object.uuid === key)
+      if (hit === undefined) {
+        const hoveredItem = hovered[key]
+        if (hoveredItem.object.onPointerOver) hoveredItem.object.onPointerOut(hoveredItem)
+        delete hovered[key]
+      }
+    })
+
+    intersects.forEach((hit) => {
+      // If a hit has not been flagged as hovered we must call onPointerOver
+      if (!hovered[hit.object.uuid]) {
+        hovered[hit.object.uuid] = hit
+        if (hit.object.onPointerOver) hit.object.onPointerOver(hit)
+      }
+      // Call onPointerMove
+      if (hit.object.onPointerMove) hit.object.onPointerMove(hit)
+    })
+  })
+
+  window.addEventListener('click', (e) => {
+    intersects.forEach((hit) => {
+      // Call onClick
+      if (hit.object.onClick) hit.object.onClick(hit)
+    })
+  })
+
+  // render-loop, called 60-times/second
+  function boxanimate(t) {
+    requestAnimationFrame(animate)
+    scene.traverse((obj) => {
+      if (obj.render) obj.render(t)
+    })
+    renderer.render(scene, camera)
+  }
+
+  boxanimate()
+
+
+
+let socialLinks = new EventModel('./img/github.png','https://github.com/RydCri','cyan')
+  let linkedIn = new EventModel('./img/linkedin.jpg','https://linkedin.com','lightblue')
+
+    // let socialLinks = makeCSSObject('div', 1, 1)
+  // // socialLinks.css3dObject.element.textContent = "Check out Ma Links!"
+  // // socialLinks.position.z = 20
+  // // socialLinks.css3dObject.element.style.opacity = "1"
+  // // socialLinks.css3dObject.element.style.padding = '1px'
+  // //
+  // // socialLinks.css3dObject.element.style.background = `repeating-linear-gradient(
+  // //       45deg,
+  // //       ${color1},
+  // //       ${color1} 10px,
+  // //       ${color2} 10px,
+  // //       ${color2} 20px
+  // //   )`
+  // //
+  // // const gitButton = makeCSSObject('button', 2, 2)
+  // // gitButton.css3dObject.element.style.border = '2px solid #fa5a85'
+  // // // gitButton.css3dObject.element.style.width = '5px'
+  // // gitButton.css3dObject.element.textContent = "GitHub"
+  // // gitButton.css3dObject.element.addEventListener('click', () => window.location = 'https://github.com/RydCri')
+  // // gitButton.position.y = -20
+  // // gitButton.position.z = 10
+  // // gitButton.position.x = -30
+  // // gitButton.css3dObject.element.style.background = '#e64e77'
+  // // socialLinks.add(gitButton)
+  // // const linkdButton = makeCSSObject('button', 2, 2)
+  // // linkdButton.css3dObject.element.style.border = '2px solid #fa5a85'
+  // // // linkdButton.css3dObject.element.style.width = '5px'
+  // // linkdButton.css3dObject.element.textContent = "LinkdIn"
+  // // linkdButton.css3dObject.element.addEventListener('click', () => window.location = 'https://github.com/RydCri')
+  // // linkdButton.position.y = -20
+  // // linkdButton.position.z = 10
+  // // linkdButton.position.x = 40
+  // // linkdButton.css3dObject.element.style.background = '#e64e77'
+  // // socialLinks.add(linkdButton)
 
 
 
@@ -334,7 +452,7 @@
     }});
     gameWorld.scale.set(1,1,1)
     gameWorld.position.set(-3,-400,2)
-    // gameWorld.rotation.y = 1
+    scene.add(gameWorld)
   });
 
   let room = new GLTFLoader().setPath("../threejs/models/90sRoom/");
@@ -351,16 +469,10 @@
     room.position.set(0,-14,12)
     scene.add(room)
   });
-  let milkbox = new GLTFLoader().setPath("../threejs/models/");
-  milkbox.load("milk_box.glb", function (gltf) {
-    milkbox = gltf.scene;
-    milkbox.scale.set(10,10,10)
-    milkbox.position.set(0,28,8)
-    scene.add(milkbox);
-  })
+
 
   let milkbox2 = new GLTFLoader().setPath("../threejs/models/");
-  milkbox2.load("milk_box.glb", function (gltf) {
+    milkbox2.load("milk_box.glb", function (gltf) {
     milkbox2 = gltf.scene;
     milkbox2.scale.set(10,10,10)
     milkbox2.position.set(1,2,0)
@@ -393,7 +505,7 @@
   window.addEventListener('resize', onWindowResize, false)
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
-    // camera.updateProjectionMatrix()
+    camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer2.setSize(window.innerWidth, window.innerHeight)
   }
@@ -434,15 +546,63 @@
 
   })
   animationScripts.push({
-    start: 46,
-    end: 48,
+    start: 0,
+    end: 40,
     func: () => {
-      scene.add(gameWorld)
-      camera.lookAt(gameWorld.position)
-      camera.position.set(-2,-400,37)
+      scene.add( light, hemisLight, skyboxMesh);
+      scene.remove(cube, hemiLight, light2);
+      camera.lookAt(light.position)
+      // socialLinks.position.set(-53,-22,-25)
 
-    // camera.position.x = lerp(gameWorld.position,499, scalePercent(90,300))
-    // camera.position.y = lerp(3,-20, scalePercent(91,140))
+      camera.position.y = lerp(4, -2, scalePercent(0, 33))
+      camera.position.z = lerp(21, 8, scalePercent(0, 32))
+      camera.position.x = lerp(2, 2, scalePercent(0, 32))
+    },
+  })
+
+  animationScripts.push({
+    //tv zoom
+    start: 33,
+    end: 47,
+    func: () => {
+      camera.position.x = lerp(2,-11, scalePercent(33,47))
+    },
+  })
+  animationScripts.push({
+    start: 47,
+    end: 47,
+    func: () => {
+      scene.remove(skyboxMesh)
+    },
+  })
+
+  animationScripts.push({
+    //gameWorld scene
+    start: 48,
+    end: 107,
+    func: () => {
+      scene.add(skyboxMesh)
+      scene.add(socialLinks)
+      scene.add(linkedIn)
+      skyboxMesh.rotation.y += .001
+
+      socialLinks.position.set(31,-400,28)
+      linkedIn.position.set(28,-400,30)
+
+      // milkbox2.position.set(34,-399,34)
+      gameWorld.rotation.y = 1
+      socialLinks.rotation.y = 2
+
+
+      camera.lookAt(gameWorld.position)
+      // camera.lookAt(socialLinks.position)
+
+      camera.position.set(12,-400,37)
+      milkbox2.rotation.y += .01
+
+      camera.position.z = lerp(36,29, scalePercent(49,87))
+      camera.position.x = lerp(39,28, scalePercent(49,87))
+      camera.position.y = lerp(-400,-400, scalePercent(49,87))
       // camera.lookAt(-5,50,50)
     // camera.position.z = lerp(21,30,  scalePercent(122,300))
       light2.position.set(
@@ -454,35 +614,36 @@
 
     }
   })
-
-  //add an animation that moves the cube through first 40 percent of scroll
   animationScripts.push({
-    start: 0,
-    end: 40,
+    //look at github box
+    start: 60,
+    end: 75,
     func: () => {
-      // root.add(background)
-      scene.add( light, hemisLight);
-      scene.remove(cube, hemiLight, light2);
+      camera.lookAt(socialLinks.position)
+    },
+  })
 
+  animationScripts.push({
+    //look at linkedin box
+    start: 81,
+    end: 92,
+    func: () => {
+      camera.lookAt(linkedIn.position)
+    },
+  })
 
-      // camera.position.set(10, 1, 2)
-      camera.lookAt(light.position)
-      resume.position.set(-3,-22,1)
-      // camera.rotation.y = 0
-      // light.position.set(-9,-4,3);
-     background.position.y = lerp(-10,73, scalePercent(0,40))
-      camera.position.y = lerp(4, -2, scalePercent(0, 32))
-      // camera.position.y = lerp(-1, 11, scalePercent(24, 40))
-      camera.position.x = lerp(2, 2, scalePercent(0, 32))
-      camera.position.z = lerp(21, 8, scalePercent(0, 32))
-      // camera.position.y = lerp(0,2, scalePercent(33,40))
-
+  animationScripts.push({
+    //look at linkedin box
+    start: 95,
+    end: 100,
+    func: () => {
+scene.add(portal)
     },
   })
 
 
   animationScripts.push({
-    start: 48,
+    start: 108,
     end: 131,
     func: () => {
       camera.lookAt(20,20,992)
@@ -490,8 +651,7 @@
       cube.scale.set(.07,.07,.07)
       cube.position.set(-60,-92,39)
       scene.add(cube, hemiLight, light2);
-      scene.remove(light, hemisLight)
-      root.remove(background)
+      scene.remove(light, hemisLight, skyboxMesh)
 
       // camera.position.set(20,20,190)
 
@@ -516,33 +676,23 @@
   animationScripts.push({
     start: 0,
     end: 33,
+    //resume CSS3D
     func: () => {
       scene.add(resume)
-      resume.position.x = lerp(2, 120, scalePercent(0, 40))
-      resume.position.z = lerp(-183, -10, scalePercent(0, 40))
+      resume.position.x = lerp(2, 120, scalePercent(0, 33))
+      resume.position.z = lerp(-183, -10, scalePercent(0, 33))
       resume.rotation.x = lerp(0,13, scalePercent(0,22))
+
 
     },
     })
 
-  animationScripts.push({
-    start: 40,
-    end: 80,
-    func: () => {
-      // camera.position.set(-2,-400,37)
 
-      camera.position.x = lerp(2,-21, scalePercent(40,51))
-      // camera.position.z = lerp(8,-8, scalePercent(60,80))
-
-    },
-  })
-
-      let spaceTexture = new THREE.TextureLoader().load('../threejs/img/space.jpg');
-      let skybox = new THREE.SphereGeometry(800,800,60);
+      let spaceTexture = new THREE.TextureLoader().load('./img/nebula.jpg');
+      let skybox = new THREE.SphereGeometry(800,800,20);
       skybox.scale(-1,1,1)
       let skyMat = new THREE.MeshBasicMaterial({map:spaceTexture});
       let skyboxMesh = new THREE.Mesh(skybox,skyMat)
-  scene.add(skyboxMesh)
 
   //add an animation that rotates the cube between 40-60 percent of scroll
   // animationScripts.push({
