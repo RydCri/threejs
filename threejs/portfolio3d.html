@@ -9,16 +9,16 @@
     a {
       color: #8ff;
     }
-#container{
-  background: #3a3d46;
-  position: fixed;
-  /*width: 50%;*/
-  /*top: 20%;*/
-  /*left: 30%;*/
-}
-body {
-  height: 500vh;
-}
+    #webgl{background-image: linear-gradient(to bottom,  rgba(33,24,99,0.3) 0%,rgba(11,88,99,.8) 100%);}
+    #container{
+    position: fixed;
+    /*width: 50%;*/
+    /*top: 20%;*/
+    /*left: 30%;*/
+    }
+    body {
+    height: 500vh;
+    }
     #menu {
       position: absolute;
       bottom: 20px;
@@ -114,11 +114,7 @@ body {
 <div id="container"><span style="color:green;text-shadow: 0 0 10px rgba(0,255,255,0.95);" id="scrollProgress"></span>
 <div style="position:absolute;top:0;left:0;" id="webgl"><div style="background: red;"><h1 style="color:white;">Heyo</h1></div></div></div>
 <div id="menu" style="position:fixed;">
-  <button id="table">TABLE</button>
-  <button id="sphere">SPHERE</button>
-  <button id="helix">HELIX</button>
-  <button id="grid">GRID</button>
-  <a href="#t3">Click</a>
+  <button>Placeholder</button>
 </div>
 
 
@@ -230,11 +226,18 @@ body {
 
   animationScripts.push({
     start: 0,
-    end: 200,
+    end: 300,
     func: () => {
       objectCSS.rotation.y += .01
       objectCSS1.rotation.y += .01
       objectCSS2.rotation.y += .01
+      particle.rotation.x += 0.0000;
+      particle.rotation.y -= 0.0040;
+      circle.rotation.x -= 0.0020;
+      circle.rotation.y -= 0.0030;
+      skelet.rotation.x -= 0.0010;
+      skelet.rotation.y += 0.0020;
+      mesh.rotation.z = lerp(0.01,29,scalePercent(0,200))
     }
   })
   animationScripts.push({
@@ -246,7 +249,7 @@ body {
   })
   animationScripts.push({
     start: 65,
-    end: 88,
+    end: 98,
     func: () => {
       objectCSS1.rotation.y = 0
     }
@@ -265,8 +268,8 @@ body {
       camera.lookAt(objectCSS.position)
 camera.position.set(0,12,0)
       camera.rotation.z = 6
-      mesh.rotation.z = lerp(0.01,29,scalePercent(0,200))
-      mesh.position.y = lerp(0,-29,scalePercent(0,200))
+
+      mesh.position.y = lerp(-50,-90,scalePercent(0,200))
       camera.position.y = lerp(100,-22, scalePercent(0,45))
       camera.position.x = lerp(0,-25, scalePercent(0,45))
 
@@ -302,8 +305,8 @@ camera.position.set(0,12,0)
   const rTop = .8;
   const rBtm = .8;
   const R = 50; // radius
-  const T = 20.5; // twists
-  const heightSegments = 500;
+  const T = 30.5; // twists
+  const heightSegments = 1000;
   const radialSegments = 10;
   const slope = 90;
   let s = 0;
@@ -331,6 +334,69 @@ camera.position.set(0,12,0)
   scene.add( mesh );
   const mesh2 = new THREE.Mesh( new THREE.SphereGeometry( 2), new THREE.MeshNormalMaterial( { side: THREE.DoubleSide, wireframe: false } ) );
   scene.add( mesh2 );
+
+  let circle,skelet,particle
+
+  circle = new THREE.Object3D();
+  skelet = new THREE.Object3D();
+  particle = new THREE.Object3D();
+
+  scene.add(circle);
+  scene.add(skelet);
+  scene.add(particle);
+
+  var geo = new THREE.TetrahedronGeometry(2, 0);
+  var geom = new THREE.IcosahedronGeometry(7, 1);
+  var geom2 = new THREE.IcosahedronGeometry(15, 1);
+
+  var material = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    shading: THREE.FlatShading
+  });
+
+  for (var i = 0; i < 1000; i++) {
+    var mesh3 = new THREE.Mesh(geo, material);
+    mesh3.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
+    mesh3.position.multiplyScalar(90 + (Math.random() * 700));
+    mesh3.rotation.set(Math.random() * 2, Math.random() * 2, Math.random() * 2);
+    particle.add(mesh3);
+  }
+
+  var mat = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    shading: THREE.FlatShading
+  });
+
+  var mat2 = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    wireframe: true,
+    side: THREE.DoubleSide
+
+  });
+
+  var planet = new THREE.Mesh(geom, mat);
+  planet.scale.x = planet.scale.y = planet.scale.z = 1;
+  circle.add(planet);
+
+  var planet2 = new THREE.Mesh(geom2, mat2);
+  planet2.scale.x = planet2.scale.y = planet2.scale.z = 1;
+  skelet.add(planet2);
+
+  var ambientLight = new THREE.AmbientLight(0x999999 );
+  scene.add(ambientLight);
+
+  var lights = [];
+  lights[0] = new THREE.DirectionalLight( 0xffffff, 1 );
+  lights[0].position.set( 1, 0, 0 );
+  lights[1] = new THREE.DirectionalLight( 0x11E8BB, 1 );
+  lights[1].position.set( 0.75, 1, 0.5 );
+  lights[2] = new THREE.DirectionalLight( 0x8200C9, 1 );
+  lights[2].position.set( -0.75, -1, 0.5 );
+  // scene.add( lights[0] );
+  scene.add( lights[1] );
+  scene.add( lights[2] );
+
+
 
   animate( );
   function onWindowResize() {
