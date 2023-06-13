@@ -125,39 +125,30 @@
   import { OrbitControls } from "https://unpkg.com/three@0.120.0/examples/jsm/controls/OrbitControls";
   import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS3DRenderer.js';
 
-  const p1 = document.createElement( 'div' );
-  p1.className = 'element';
-  p1.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
-  const p2 = document.createElement( 'div' );
-  p2.className = 'element';
-  p2.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
-  const t1 = document.createElement( 'h2' );
-  t1.className = 'cardTitle';
-  t1.textContent = 'Project Name'
-  p1.appendChild( t1 );
-  const t2 = document.createElement( 'h2' );
-  t2.className = 'cardTitle';
-  t2.textContent = 'Project Name'
-  p2.appendChild( t2 );
-  const p3 = document.createElement( 'div' );
-  p3.className = 'element';
-  p3.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
-  const t3 = document.createElement( 'h2' );
-  t3.className = 'cardTitle';
-  t3.textContent = 'Project Name'
-  p3.appendChild( t3 );
 
-  const h1 = document.createElement( 'p' )
-  h1.textContent = 'description of what the project is'
-  p1.appendChild( h1 )
-  const i1 = document.createElement( 'img' )
-  i1.src = './img/eye.png'
-  p1.appendChild( i1 )
+  function makeCSSobject(title, text, image) {
+    const t1 = document.createElement( 'div' )
+    const t2 = document.createElement( 'h2' )
+    const t3 = document.createElement( 'img' )
+    const t4 = document.createElement( 'p' )
+    t1.className = 'element'
+    t1.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+    t2.className = 'cardTitle'
+    t2.textContent = title;
+    t3.src = image;
+    t4.textContent = text;
+    t1.appendChild(t2)
+    t1.appendChild(t3)
+    t1.appendChild(t4)
+    return new CSS3DObject( t1 );
+  }
 
-
-  const objectCSS = new CSS3DObject( p1 );
-  const objectCSS1 = new CSS3DObject( p2 )
-  const objectCSS2 = new CSS3DObject( p3 )
+  const objectCSS = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS1 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS2 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS3 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS4 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS5 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
 
   let controls;
   function lerp(x, y, a) {
@@ -211,18 +202,37 @@
 
   const plane = new THREE.GridHelper( 25, 25 );
   scene.add( plane );
-  objectCSS.position.set(-25,-44,10)
+  camera.position.set(0,12,10)
+
+
+
+  objectCSS.position.set(-10,12,-30)
   objectCSS.scale.set(.1,.1,.1)
-  objectCSS.rotation.x = -2
+  objectCSS.rotation.x = 0
   scene.add(objectCSS)
-  objectCSS1.position.set(20,-82,0)
+  objectCSS1.position.set(40,12,-10)
   objectCSS1.scale.set(.1,.1,.1)
-  objectCSS1.rotation.x = -2
+  objectCSS1.rotation.x = 0
   scene.add(objectCSS1)
-  objectCSS2.position.set(60,-152,-40)
+  objectCSS2.position.set(20,12,30)
   objectCSS2.scale.set(.1,.1,.1)
-  objectCSS2.rotation.x = -2
+  objectCSS2.rotation.x = 0
+  objectCSS2.rotation.y = -5
   scene.add(objectCSS2)
+  objectCSS3.position.set(0,12,70)
+  objectCSS3.scale.set(.1,.1,.1)
+  objectCSS3.rotation.x = 0
+  objectCSS3.rotation.y = -3
+  scene.add(objectCSS3)
+  objectCSS4.position.set(-50,12,20)
+  objectCSS4.scale.set(.1,.1,.1)
+  objectCSS4.rotation.x = 0
+  objectCSS4.rotation.y = -5
+  scene.add(objectCSS4)
+  objectCSS5.position.set(20,12,20)
+  objectCSS5.scale.set(.1,.1,.1)
+  objectCSS5.rotation.x = 0
+  // scene.add(objectCSS5)
 
   animationScripts.push({
     start: 0,
@@ -237,68 +247,62 @@
       circle.rotation.y -= 0.0030;
       skelet.rotation.x -= 0.0010;
       skelet.rotation.y += 0.0020;
-      mesh.rotation.z = lerp(0.01,29,scalePercent(0,200))
+      // mesh.rotation.z = lerp(0.01,29,scalePercent(0,200))
     }
   })
-  animationScripts.push({
-    start: 45,
-    end: 65,
-    func: () => {
-      objectCSS.rotation.y = 0
-    }
-  })
-  animationScripts.push({
-    start: 65,
-    end: 98,
-    func: () => {
-      objectCSS1.rotation.y = 0
-    }
-  })
-  animationScripts.push({
-    start: 180,
-    end: 210,
-    func: () => {
-      objectCSS2.rotation.y = -1
-    }
-  })
+  // animationScripts.push({
+  //   start: 45,
+  //   end: 65,
+  //   func: () => {
+  //     objectCSS.rotation.y = 0
+  //   }
+  // })
+  // animationScripts.push({
+  //   start: 65,
+  //   end: 98,
+  //   func: () => {
+  //     objectCSS1.rotation.y = 0
+  //   }
+  // })
+  // animationScripts.push({
+  //   start: 180,
+  //   end: 210,
+  //   func: () => {
+  //     objectCSS2.rotation.y = -1
+  //   }
+  // })
   animationScripts.push({
     start:0,
-    end: 45,
+    end: 95,
     func: () => {
       camera.lookAt(objectCSS.position)
-camera.position.set(0,12,0)
-      camera.rotation.z = 6
+      // camera.rotation.z = lerp(-1,0, scalePercent(0,95))
 
-      mesh.position.y = lerp(-50,-90,scalePercent(0,200))
-      camera.position.y = lerp(100,-22, scalePercent(0,45))
-      camera.position.x = lerp(0,-25, scalePercent(0,45))
+      // mesh.position.y = lerp(-50,-90,scalePercent(0,200))
+      // camera.position.y = lerp(12, 40, scalePercent(0,45))
+      camera.rotation.y = lerp(6.5, -3, scalePercent(0,95))
 
     }
   })
 
-  animationScripts.push({
-    start: 66,
-    end: 79,
-    func: () => {
-      camera.lookAt(objectCSS1.position)
-      objectCSS1.rotation.y = 0
-      camera.rotation.z = lerp(2,0, scalePercent(66, 79))
-      camera.position.x = lerp(0,20, scalePercent(66,79))
-      camera.position.y = lerp(-22,-35, scalePercent(66,79))
-    }
-  })
-
-  animationScripts.push({
-    start: 100,
-    end: 200,
-    func: () => {
-      camera.lookAt(objectCSS2.position)
-      camera.rotation.z = 0
-      camera.position.x = lerp(20,40, scalePercent(100,200))
-      camera.position.y = lerp(-35,-129, scalePercent(100,200))
-      camera.position.z = lerp(0,-40, scalePercent(100,200))
-    }
-  })
+  // animationScripts.push({
+  //   start: 66,
+  //   end: 79,
+  //   func: () => {
+  //     camera.lookAt(objectCSS1.position)
+  //     objectCSS1.rotation.y = 0
+  //     camera.rotation.z = lerp(2,0, scalePercent(66, 79))
+  //     camera.position.x = lerp(0,20, scalePercent(66,79))
+  //     camera.position.y = lerp(-22,-35, scalePercent(66,79))
+  //   }
+  // })
+  //
+  // animationScripts.push({
+  //   start: 100,
+  //   end: 200,
+  //   func: () => {
+  //   }
+  // })
 
   //Spiral
 
