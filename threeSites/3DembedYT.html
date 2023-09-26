@@ -34,8 +34,9 @@
       iframe.style.width = '480px';
       iframe.style.height = '360px';
       iframe.style.border = '0px';
-      iframe.src = [ 'https://www.youtube.com/embed/', id, '?rel=0' ].join( '' );
+      iframe.src = [ 'https://www.youtube.com/embed/', id, '?autoplay=1' ].join( '' );
       div.appendChild( iframe );
+      console.log(iframe)
 
       const object = new CSS3DObject( div );
       object.position.set( x, y, z );
@@ -132,7 +133,7 @@
       // requestID = requestAnimationFrame( animate );
       // group.style.transform = 'rotate(20deg)'
       // group.rotation.x += 0.01;
-      // group.rotation.y += 0.2;
+      // group.rotation.y += 0.0002;
 
       renderer.render( scene, camera );
       // render()

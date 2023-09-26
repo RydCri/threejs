@@ -138,17 +138,17 @@
     t3.src = image;
     t4.textContent = text;
     t1.appendChild(t2)
-    t1.appendChild(t3)
     t1.appendChild(t4)
+    t1.appendChild(t3)
     return new CSS3DObject( t1 );
   }
 
-  const objectCSS = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
-  const objectCSS1 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
-  const objectCSS2 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
-  const objectCSS3 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
-  const objectCSS4 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
-  const objectCSS5 = makeCSSobject('Demo','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS = makeCSSobject('0','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS1 = makeCSSobject('1','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS2 = makeCSSobject('2','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS3 = makeCSSobject('3','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS4 = makeCSSobject('4','DEMOEMOEMEO','./img/eye.png')
+  const objectCSS5 = makeCSSobject('5','DEMOEMOEMEO','./img/eye.png')
 
   let controls;
   function lerp(x, y, a) {
@@ -213,39 +213,41 @@
   objectCSS1.position.set(40,12,-10)
   objectCSS1.scale.set(.1,.1,.1)
   objectCSS1.rotation.x = 0
+  objectCSS1.rotation.y = -1
   scene.add(objectCSS1)
   objectCSS2.position.set(20,12,30)
   objectCSS2.scale.set(.1,.1,.1)
   objectCSS2.rotation.x = 0
-  objectCSS2.rotation.y = -5
+  objectCSS2.rotation.y = 4
   scene.add(objectCSS2)
-  objectCSS3.position.set(0,12,70)
+  objectCSS3.position.set(0,12,50)
   objectCSS3.scale.set(.1,.1,.1)
   objectCSS3.rotation.x = 0
   objectCSS3.rotation.y = -3
   scene.add(objectCSS3)
-  objectCSS4.position.set(-50,12,20)
+  objectCSS4.position.set(-30,12,20)
   objectCSS4.scale.set(.1,.1,.1)
   objectCSS4.rotation.x = 0
-  objectCSS4.rotation.y = -5
+  objectCSS4.rotation.y = -4
   scene.add(objectCSS4)
-  objectCSS5.position.set(20,12,20)
+  objectCSS5.position.set(-45,12,-10)
   objectCSS5.scale.set(.1,.1,.1)
   objectCSS5.rotation.x = 0
-  // scene.add(objectCSS5)
+  objectCSS5.rotation.y = -5
+  scene.add(objectCSS5)
 
   animationScripts.push({
     start: 0,
     end: 300,
     func: () => {
-      objectCSS.rotation.y += .01
-      objectCSS1.rotation.y += .01
-      objectCSS2.rotation.y += .01
+      // objectCSS.rotation.y += .01
+      // objectCSS1.rotation.y += .01
+      // objectCSS2.rotation.y += .01
       particle.rotation.x += 0.0000;
-      particle.rotation.y -= 0.0040;
-      circle.rotation.x -= 0.0020;
-      circle.rotation.y -= 0.0030;
-      skelet.rotation.x -= 0.0010;
+      particle.rotation.y -= 0.00040;
+      circle.rotation.x -= 0.00020;
+      circle.rotation.y -= 0.00030;
+      skelet.rotation.x -= 0.00010;
       skelet.rotation.y += 0.0020;
       // mesh.rotation.z = lerp(0.01,29,scalePercent(0,200))
     }
