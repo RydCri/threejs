@@ -22,6 +22,7 @@ function initScene() {
         1000
     );
     clock = new THREE.Clock();
+
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -66,7 +67,7 @@ GLTFloader.load('goldyFish_blue.glb', function (gltf) {
 
     mixer2 = new THREE.AnimationMixer(gltf.scene);
 
-    mixer2.clipAction(gltf.animations[0]).play();
+    mixer2.clipAction(gltf.animations[0]).play()
 
     model.scene.position.set(-3,4,1)
     scene.add(model.scene);
@@ -78,14 +79,13 @@ camera.position.set(0, 20, 50);
 
 function animate() {
     requestAnimationFrame(animate);
-
     let delta = clock.getDelta();
 
     if (mixer) {
         mixer.update(delta);
     }
     if (mixer2) {
-        mixer2.update(delta)
+        mixer2.update(delta + 22000)
     }
 
     renderer.render(scene, camera);
