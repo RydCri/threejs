@@ -9,9 +9,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
 let camera, stats;
-let composer, renderer, mixer, clock;
+let composer, renderer, mixer, mixer2, clock;
 
 const params = {
     threshold: 0,
@@ -40,18 +41,16 @@ function init() {
     const scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
-    camera.position.set( - 5, 2.5, - 3.5 );
+    camera.position.set( 0, 48, 8 );
     scene.add( camera );
 
     const controls = new OrbitControls( camera, renderer.domElement );
-    controls.maxPolarAngle = Math.PI * 0.5;
-    controls.minDistance = 3;
-    controls.maxDistance = 8;
+    // controls.maxPolarAngle = Math.PI * 0.5;
 
-    scene.add( new THREE.AmbientLight( 0xcccccc ) );
+    // scene.add( new THREE.AmbientLight( 0xcccccc ) );
 
     const pointLight = new THREE.PointLight( 0xffffff, 100 );
-    camera.add( pointLight );
+    // camera.add( pointLight );
 
     const renderScene = new RenderPass( scene, camera );
 
@@ -67,7 +66,8 @@ function init() {
     composer.addPass( bloomPass );
     composer.addPass( outputPass );
 
-    new GLTFLoader().load( '../threejs/models/goldyFish.glb', function ( gltf ) {
+    const loader = new GLTFLoader().setPath('../threejs/models/');
+    loader.load( 'someFish.glb', function ( gltf ) {
 
         const model = gltf.scene;
 
@@ -80,6 +80,22 @@ function init() {
         animate();
 
     } );
+
+    loader.load( 'hologramFish.glb', function ( gltf ) {
+
+        const model = gltf.scene;
+        model.position.set(0,-50,10)
+        scene.add( model );
+
+        mixer2 = new THREE.AnimationMixer( model );
+        const clip = gltf.animations[ 0 ];
+        mixer2.clipAction( clip.optimize() ).play();
+
+        animate();
+
+    } );
+
+
 
     const gui = new GUI();
 
@@ -135,7 +151,9 @@ function animate() {
     const delta = clock.getDelta();
 
     mixer.update( delta );
-
+    if(mixer2) {
+        mixer2.update(delta)
+    }
     stats.update();
 
     composer.render();

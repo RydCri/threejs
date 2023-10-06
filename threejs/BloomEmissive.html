@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>three.js webgl - postprocessing - unreal bloom</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link type="text/css" rel="stylesheet" href="main.css">
+  <style>
+    #info > * {
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container"></div>
+
+<div id="info">
+  <a href="https://threejs.org" target="_blank" rel="noopener">Bloom Pass - three.js</a>
+</div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+    }
+  }
+        </script>
+
+<script src="./BloomEmissive.js" type="module"></script>
+</body>
+</html>
