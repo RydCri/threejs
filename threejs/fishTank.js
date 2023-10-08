@@ -31,7 +31,7 @@ const params = {
         renderer,
         stats;
 
-    let mixer, mixer2, mixer3
+    let mixer, mixer2, mixer3, mixer4
 init()
 function init() {
 
@@ -65,7 +65,7 @@ function init() {
 
     const renderScene = new RenderPass( scene, camera );
 
-    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), .815, 0.1, 0.9 );
+    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), .815, 0.1, 0.822 );
     // bloomPass.threshold = params.threshold;
     // bloomPass.strength = params.strength;
     // bloomPass.radius = params.radius;
@@ -166,34 +166,38 @@ function init() {
         mixer.clipAction( clip.optimize() ).play();
 
         animate();
-},
-function (xhr) {
-    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-},
-function (error) {
-    console.log(error);
-}
-);
+        });
     someFish.load( 'justRed.glb', function ( gltf ) {
 
-            const model = gltf.scene;
-            model.position.set(2,10,-62)
+        const model = gltf.scene;
+            model.position.set(15,10,-62)
+            model.receiveShadow = true;
+            model.rotateY(Math.PI/7)
             scene.add( model );
 
             mixer2 = new THREE.AnimationMixer( model );
-            mixer2.timeScale = 0.80
+            mixer2.timeScale = 2
             const clip = gltf.animations[ 0 ];
             mixer2.clipAction( clip.optimize() ).play();
 
             animate();
-        },
-        function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function (error) {
-            console.log(error);
-        }
-    );
+        });
+    someFish.load( 'justBlue.glb', function ( gltf ) {
+
+        const model = gltf.scene;
+        model.position.set(23,1,-74)
+        model.receiveShadow = true;
+        model.rotateX(Math.PI/7)
+        model.rotateY(-Math.PI/3)
+        scene.add( model );
+
+        mixer4 = new THREE.AnimationMixer( model );
+        mixer4.timeScale = .5
+        const clip = gltf.animations[ 0 ];
+        mixer4.clipAction( clip.optimize() ).play();
+
+        animate();
+    });
     someFish.load( 'justBlue.glb', function ( gltf ) {
 
             const model = gltf.scene;
@@ -202,18 +206,11 @@ function (error) {
 
             mixer3 = new THREE.AnimationMixer( model );
             const clip = gltf.animations[ 0 ];
-            mixer3.timeScale = 0.72
+            mixer3.timeScale = 0.68
             mixer3.clipAction( clip.optimize()).play();
 
             animate();
-        },
-        function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function (error) {
-            console.log(error);
-        }
-    );
+        });
 
 // let goldy = new GLTFLoader().setPath("../threejs/models/");
     // goldy.load("goldyFish_red.glb", function (gltf) {
@@ -267,12 +264,19 @@ function (error) {
     }
     const animationScripts = []
 
+console.log(camera.position)
     //add an animation that flashes the cube through 100 percent of scroll
     animationScripts.push({
         start: 0,
         end: 101,
         func: () => {
-            const time = Date.now() * 0.0005;
+            // const time = Date.now() * 0.0005;
+            camera.position.set(21, 1, -64.7);
+            // camera.position.set(24, 8, -75);
+            camera.lookAt(0,29,75)
+            // camera.position.z = lerp(-55, 33, scalePercent(30, 10))
+            // camera.position.x = lerp(0, 13, scalePercent(30, 100))
+            // camera.position.y = lerp(13, 3, scalePercent(30, 100))
             // bloomPass.strength = .09 * scrollPercent
             // galaxy.rotation.y += 0.001
             // meshKnot.rotation.y += 0.001
@@ -304,8 +308,13 @@ function (error) {
         start: 0,
         end: 40,
         func: () => {
-            camera.position.set(0, 13, -55);
-            camera.lookAt(0,0,0)
+            // camera.position.set(0, 13, -55);
+            // camera.lookAt(0,0,0)
+            // camera.position.z = lerp(-55, 33, scalePercent(30, 40))
+            // camera.position.x = lerp(0, 13, scalePercent(30, 40))
+            // camera.position.y = lerp(13, 3, scalePercent(30, 40))
+
+
             // camera.position.set(-50, 19, -15);
             // camera.lookAt(someFish)
             // cube.position.z = lerp(0 , -12, scalePercent(0, 40))
@@ -315,10 +324,13 @@ function (error) {
 
     //add an animation that rotates the cube between 40-60 percent of scroll
     animationScripts.push({
-        start: 40,
-        end: 60,
+        start: 30,
+        end: 35,
         func: () => {
-            rectLight1.width = lerp(0, 52, scalePercent(40,60))
+            // camera.position.z = lerp(-55, 0, scalePercent(40, 45))
+            // camera.position.x = lerp(0, 0, scalePercent(40, 45))
+            // camera.position.y = lerp(13, 10, scalePercent(40, 45))
+            // rectLight1.width = lerp(0, 52, scalePercent(40,60))
             // camera.lookAt(vaporWave.position)
             // camera.position.z = lerp(88, 120, scalePercent(60, 80))
             // camera.position.y = lerp(8, 12, scalePercent(60, 80))
@@ -330,11 +342,12 @@ function (error) {
 
     //add an animation that moves the camera between 60-80 percent of scroll
     animationScripts.push({
-        start: 60,
-        end: 80,
+        start: 46,
+        end: 50,
         func: () => {
-            camera.position.z = lerp(-52, 37, scalePercent(60, 80))
-            camera.position.y = lerp(9, 12, scalePercent(60, 80))
+            // camera.position.set(0,10,0)
+            // camera.position.z = lerp(-52, 37, scalePercent(60, 80))
+            // camera.position.y = lerp(9, 12, scalePercent(60, 80))
             // camera.rotation.z = lerp(0, 1, scalePercent(60, 80))
         },
     })
@@ -405,6 +418,9 @@ function onWindowResize() {
         }
         if (mixer3) {
             mixer3.update(delta)
+        }
+        if (mixer4) {
+            mixer4.update(delta)
         }
         requestAnimationFrame(animate)
         // requestAnimationFrame(update);
